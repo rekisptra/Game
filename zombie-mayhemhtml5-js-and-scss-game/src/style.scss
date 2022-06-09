@@ -1,0 +1,1102 @@
+// Sprite Spirit Usage
+// https://github.com/eliorshalev/sprite-spirit
+// Set Dimensions
+@mixin dimensions($width: null, $height: $width) {
+  min-width: $width;
+  min-height: $height;
+}
+
+// Sprite to Animate Mixin
+// https://eliorshalev.github.io/sprite-spirit/
+@mixin spriteSpirit($name, $url, $vertical, $width, $height, $frameNum, $duration: .8, $iteration: 0, $reverse: false) {
+  $single-Y-frame: $height / $frameNum;
+  $single-X-frame: $width / $frameNum;
+
+  background-image: url($url);
+  background-repeat: no-repeat;
+  animation: #{$name} steps($frameNum);
+  animation-duration: $duration + s;
+
+  @if $iteration == 0 {
+    animation-iteration-count: infinite;
+  } @else {
+    animation-iteration-count: $iteration;
+  }
+
+  @if $reverse == true {
+    animation-direction: reverse;
+  } @else {
+    animation-direction: normal;
+  }
+
+  @if $vertical == true {
+    @include dimensions($width: $width, $height: $single-Y-frame);
+    background-position: 0 top;
+  } @else {
+    @include dimensions($width: $single-X-frame, $height: $height);
+    background-position: left 0;
+  }
+
+  @keyframes #{$name} {
+    to {
+      @if $vertical == true {
+        background-position: 0 -#{$height};
+      } @else {
+        background-position: -#{$width} 0;
+      }
+    }
+  }
+}
+
+//// Vriables
+// Fonts
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Cinzel-Regular'), url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/i2BwM1Eq2JyiNOY_VrkubOvvDin1pK8aKteLpeZ5c0A.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+// Canves
+$canvesSizeWidth: 1024px;
+$canvesSizeHeight: 550px;
+// Zombies
+$zombieSprite: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-1.png';
+$zombie2Sprite: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-2.png';
+$zombie3Sprite: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-3.png';
+$zombie4Sprite: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-4.png';
+$zombie5Sprite: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-5.png';
+$zombie6Sprite: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-6.png';
+$zombieSpriteDeath: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-1-death.png';
+$zombie2SpriteDeath: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-2-death.png';
+$zombie3SpriteDeath: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-3-death.png';
+$zombie4SpriteDeath: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-4-death.png';
+$zombie5SpriteDeath: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-5-death.png';
+$zombie6SpriteDeath: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/zombie-6-death.png';
+// Backgrounds
+$background-1: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/bg-1.png';
+$background-2: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/bg-2.png';
+$background-3: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/bg-3.png';
+$background-4: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/bg-4.png';
+//// Mixin
+// Set Dimensions
+@mixin dimensions($width: null,
+$height: $width) {
+  width: $width;
+  height: $height;
+}
+
+// Fill Position
+@mixin fillPosition() {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+//// Reset
+%reset {
+  margin: 0;
+  padding: 0;
+}
+
+%flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: transparent;
+}
+
+html,
+body {
+  @include dimensions($width: 100%);
+  @extend %reset;
+}
+
+body {
+  @extend %reset;
+  @extend %flex;
+  @include dimensions($width: 100%);
+  overflow: hidden;
+  background: #000000;
+  font-family: 'Century Gothic', AppleGothic, 'CenturyGothic', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+//// Keyframes
+// Zombie Walk
+@keyframes walk {
+  to {
+    transform: translateX(-$canvesSizeWidth);
+  }
+}
+
+// Reload Trigger Spin
+@keyframes reload {
+  to {
+    transform: rotate(6turn);
+  }
+}
+
+// Reload Ammo Spin
+@keyframes reload-trigger {
+  0% {
+    transform: rotate(-360deg);
+  }
+  20% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+// Blinking Text
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  75% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}
+
+// Bleeding Text
+@keyframes dripping {
+  0% {
+    text-shadow: 6px 4px 0 red, -5px 5px 0 red, -3px 6px 0 red, 2px 11px 0 red;
+  }
+  30% {
+    text-shadow: 5px 3px 0 red, -4px 4px 0 red, -2px 5px 0 red, 1px 10px 0 red;
+  }
+  60% {
+    text-shadow: 6px 4px 0 red, -5px 5px 0 red, -3px 6px 0 red, 2px 11px 0 red;
+  }
+  90% {
+    text-shadow: 5px 3px 0 red, -4px 4px 0 red, -2px 5px 0 red, 1px 10px 0 red;
+  }
+  100% {
+    text-shadow: 6px 4px 0 red, -5px 5px 0 red, -3px 6px 0 red, 2px 11px 0 red;
+  }
+}
+
+//// Canves
+// Game Canves
+#canves {
+  @include dimensions($width: $canvesSizeWidth, $height: 550px);
+  min-width: $canvesSizeWidth;
+  min-height: $canvesSizeHeight;
+  position: relative;
+  overflow: hidden;
+  background-color: #000000;
+  cursor: crosshair;
+  border-radius: 8px;
+  font-family: 'Cinzel', serif;
+  transition: background-image 1.3s ease;
+  background-repeat: no-repeat;
+  background-size: 1024px 550px;
+  @for $i from 1 through 4 {
+    &[data-wave="#{$i}"] {
+      @if $i==1 {
+        background-image: url($background-1);
+      }
+      @if $i==2 {
+        background-image: url($background-2);
+      }
+      @if $i==3 {
+        background-image: url($background-3);
+      }
+      @if $i==4 {
+        background-image: url($background-4);
+      }
+    }
+  }
+  // Game Cover
+  .game-cover {
+    @include fillPosition();
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/cover.jpg");
+    background-size: 1024px 550px;
+    display: block;
+    z-index: 100000;
+  }
+  // Brushed Frame
+  &:after {
+    @include fillPosition();
+    content: '';
+    pointer-events: none;
+    display: block;
+    background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/frame.png") no-repeat;
+    background-size: cover;
+    border-radius: 8px;
+    z-index: 1000000;
+  }
+}
+
+// Github corner Icon
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out
+}
+
+@keyframes octocat-wave {
+  0%,
+  100% {
+    transform: rotate(0)
+  }
+  20%,
+  60% {
+    transform: rotate(-25deg)
+  }
+  40%,
+  80% {
+    transform: rotate(10deg)
+  }
+}
+
+@media (max-width:500px) {
+  .github-corner:hover .octo-arm {
+    animation: none
+  }
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out
+  }
+}
+
+.github-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10000000;
+}
+
+// Footer
+#footer {
+  font-size: 11px;
+  color: #5a5a5a;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  line-height: 21px;
+  text-align: center;
+  &:hover {
+    svg {
+      fill: #ff0000;
+    }
+  }
+  p {
+    @extend %reset;
+  }
+  @media screen and (max-width: 625px) {
+    text-align: center;
+  }
+  a {
+    color: currentColor;
+    text-decoration: none;
+  }
+  .credits {
+    color: #353535;
+  }
+  svg {
+    fill: #646464;
+    width: 15px;
+    transition: fill .3s ease;
+  }
+  .get-code.generate-code & {
+    margin-bottom: 164px;
+    @media screen and (max-width: 625px) {
+      margin-bottom: 208px;
+    }
+  }
+}
+
+//// Loading
+.loader {
+  @include fillPosition();
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: opacity .3s ease;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/cover.jpg");
+  background-size: 1024px 550px;
+  .loading & {
+    opacity: 1;
+  }
+  .zombie-loader {
+    &:before {
+      content: '';
+      display: block;
+      animation-duration: 0.7s!important;
+    }
+    transform: scale(0.5);
+    margin-bottom: 20px;
+  }
+  span {
+    animation: flash 1.8s ease infinite;
+    color: #ffffff;
+    font-size: 9px;
+    position: absolute;
+    bottom: 62px;
+    right: 72px;
+  }
+  .loading-char {
+    background: radial-gradient(ellipse at center, black 0%, rgba(246, 246, 246, 0) 50%);
+    position: absolute;
+    bottom: -20px;
+    right: 30px;
+  }
+}
+
+//// Info Board
+// Info Board
+.info-board {
+  @extend %reset;
+  display: block;
+  position: absolute;
+  top: 35px;
+  left: 35px;
+  font-size: 25px;
+  color: #ffffff;
+  z-index: 10000;
+  padding: 0;
+  .intro &,
+  .end-game &,
+  .game-over &,
+  .level-message & {
+    display: none;
+  }
+  li {
+    list-style: none;
+    margin-bottom: 16px;
+    &.killed-status {
+      background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+      background-position: 0 0;
+      background-size: 114px;
+      width: 114px;
+      height: 39.5px;
+      padding: 0 0 10px 51px;
+      font-size: 32px;
+      line-height: 41px;
+    }
+    &.life {
+      margin-top: 20px;
+      margin-bottom: 9px;
+      .heart-icon {
+        background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+        background-position: 0 -47px;
+        background-size: 114px;
+        width: 24px;
+        height: 23px;
+        display: inline-block;
+        margin-right: 15px;
+        opacity: 1;
+        transition: opacity .3s ease;
+        &.hide {
+          animation: flash .6s ease;
+          opacity: 0.2;
+        }
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+    &#mute-music {
+      background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+      background-position: 0 -75px;
+      background-size: 114px;
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 6px;
+      &.muted {
+        background-position: 0 -105px;
+      }
+    }
+    &#mute-sounds {
+      background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+      background-position: -30px -73px;
+      background-size: 114px;
+      width: 22px;
+      height: 25px;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 6px;
+      &.muted {
+        background-position: -30px -104px;
+      }
+    }
+  }
+}
+
+// Pause/Resume Icons
+#pause-game {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+  background-position: -60px -106px;
+  background-size: 114px;
+  width: 19px;
+  height: 22px;
+  cursor: pointer;
+  position: absolute;
+  top: 35px;
+  right: 35px;
+  z-index: 100000;
+  &.paused {
+    background-position: -60px -75px;
+  }
+  .intro &,
+  .end-game &,
+  .game-over &,
+  .level-message & {
+    display: none;
+  }
+  .game-paused & {
+    z-index: 100000;
+  }
+}
+
+//// Ammo
+// Ammo
+.ammo {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+  background-position: 0 -134px;
+  background-size: 114px;
+  width: 70px;
+  height: 74.5px;
+  transition: transform .3s ease;
+  position: absolute;
+  bottom: 35px;
+  right: 35px;
+  z-index: 10000;
+  display: block;
+  .intro &,
+  .end-game &,
+  .game-over &,
+  .level-message & {
+    display: none;
+  }
+  // Ammo Clip States
+  @for $i from 0 through 6 {
+    &[data-ammo="#{$i}"] {
+      @if $i==0 {
+        background-position: 0px -581px;
+        transform: rotate(360deg);
+      }
+      @if $i==1 {
+        background-position: 0px -507px;
+        transform: rotate(300deg);
+      }
+      @if $i==2 {
+        background-position: 0px -432px;
+        transform: rotate(240deg);
+      }
+      @if $i==3 {
+        background-position: 0px -358px;
+        transform: rotate(180deg);
+      }
+      @if $i==4 {
+        background-position: 0 -283px;
+        transform: rotate(120deg);
+      }
+      @if $i==5 {
+        background-position: 0 -208px;
+        transform: rotate(60deg);
+      }
+      @if $i==6 {
+        background-position: 0 -134px;
+      }
+    }
+  }
+  &.reload {
+    animation: reload .6s ease;
+  }
+}
+
+// Reload Key Hint
+.reload-key {
+  @include fillPosition();
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 9px;
+  color: #878787;
+  transform: translateX(0);
+  transition: transform .3s cubic-bezier(0.6, 1.14, 0.04, 1.02), opacity .3s cubic-bezier(0.6, 1.14, 0.04, 1.02);
+  z-index: 100000;
+  [data-ammo="6"] &,
+  .intro &,
+  .end-game &,
+  .game-over &,
+  .level-message & {
+    display: none;
+  }
+}
+
+// Reload Hint
+.reload-hint {
+  position: absolute;
+  bottom: 55px;
+  right: 25px;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(0.6, 1.14, 0.04, 1.02), opacity .3s cubic-bezier(0.6, 1.14, 0.04, 1.02);
+  padding: 0 28px;
+  color: #ffffff;
+  opacity: 0;
+  z-index: 1000000;
+  display: block;
+  &.visible {
+    transform: translateX(0);
+    opacity: 1;
+    .reload-trigger {
+      animation: reload-trigger 2s ease infinite;
+    }
+  }
+  .intro &,
+  .end-game &,
+  .game-over &,
+  .level-message & {
+    display: none;
+  }
+}
+
+// Reload Trigger
+.reload-trigger {
+  cursor: pointer;
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/250758/icons.png") no-repeat;
+  background-size: 114px;
+  background-position: bottom right;
+  width: 35px;
+  height: 35px;
+  transition: transform .3s ease;
+}
+
+//// Overlay
+// Overlay Screen
+.overlay-screen-levels,
+.overlay-screen {
+  @include fillPosition();
+  background: rgba(0, 0, 0, .8);
+  visibility: hidden;
+  transition: visibility .3s ease, opacity .3s ease;
+  z-index: 100000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  .end-game &,
+  .game-over &,
+  .level-message &,
+  .game-paused & {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+// Overlay Title
+.big-title {
+  top: 115px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 128px;
+  margin: 0;
+  text-shadow: 5px 3px 0 red, -4px 4px 0 red, -2px 5px 0 red, 1px 10px 0 red;
+  transition: opacity .3s ease, visibility .3s ease;
+  animation: dripping .2s ease infinite;
+  cursor: default;
+  display: none;
+  &:hover {
+    animation: flash .3s ease infinite, dripping .2s ease infinite;
+  }
+  div {
+    text-transform: uppercase;
+    font-size: 99px;
+    letter-spacing: 20px;
+    display: block;
+    margin-top: -73px;
+    margin-left: 31px;
+  }
+  &.game-over-title {
+    .game-over & {
+      display: block;
+    }
+    span {
+      margin-left: 18px;
+    }
+  }
+  &.end-game-title {
+    .end-game & {
+      display: block;
+    }
+    span {
+      margin-left: 19px;
+    }
+  }
+  &.game-pause-title {
+    .game-paused & {
+      display: block;
+    }
+  }
+  &.level-title {
+    .level-message & {
+      display: block;
+    }
+  }
+}
+
+// Restart Hint
+.restart-hint {
+  animation: flash 1.8s ease infinite;
+  color: #838383;
+  font-size: 23px;
+  position: absolute;
+  bottom: 109px;
+  display: none;
+  cursor: pointer;
+  .end-game &,
+  .game-over & {
+    display: block;
+  }
+}
+
+//// Zombies
+// Zombie General Style
+.zombie {
+  position: absolute;
+  bottom: 74px;
+  right: 0;
+  transform: translateX(400px);
+  animation: walk linear infinite;
+  &:before {
+    content: '';
+    display: block;
+  }
+  &.killed {
+    pointer-events: none;
+    transition: none;
+    animation-play-state: paused;
+    &:before {
+      pointer-events: none;
+      animation-fill-mode: forwards;
+    }
+  }
+  .game-paused & {
+    pointer-events: none;
+    transition: none;
+    animation-play-state: paused;
+    &:before {
+      pointer-events: none;
+      animation-play-state: paused;
+    }
+  }
+}
+
+// Zombies Types
+@for $i from 1 through 6 {
+  .zombie-#{$i} {
+    @if $i==1 {
+      &:before {
+        @include spriteSpirit('zombie-1',
+        $zombieSprite,
+        true,
+        194px,
+        4080px,
+        16,
+        .6,
+        0,
+        false);
+      }
+      &.killed {
+        &:before {
+          @include spriteSpirit('zombie-1-death',
+          $zombieSpriteDeath,
+          true,
+          340px,
+          5220px,
+          20,
+          .6,
+          0,
+          false);
+          transform: translate(158px, 22px);
+        }
+      }
+    }
+    @if $i==2 {
+      &:before {
+        @include spriteSpirit('zombie-2',
+        $zombie2Sprite,
+        true,
+        211px,
+        4096px,
+        16,
+        .6,
+        0,
+        false);
+      }
+      &.killed {
+        &:before {
+          @include spriteSpirit('zombie-2-death',
+          $zombie2SpriteDeath,
+          true,
+          347px,
+          5400px,
+          20,
+          .6,
+          0,
+          false);
+          transform: translate(159px, 31px);
+        }
+      }
+    }
+    @if $i==3 {
+      &:before {
+        @include spriteSpirit('zombie-3',
+        $zombie3Sprite,
+        true,
+        189px,
+        3744px,
+        16,
+        .6,
+        0,
+        false);
+      }
+      &.killed {
+        &:before {
+          @include spriteSpirit('zombie-3-death',
+          $zombie3SpriteDeath,
+          true,
+          334px,
+          5120px,
+          20,
+          .6,
+          0,
+          false);
+          transform: translate(156px, 25px);
+        }
+      }
+    }
+    @if $i==4 {
+      &:before {
+        @include spriteSpirit('zombie-4',
+        $zombie4Sprite,
+        true,
+        386px,
+        6000px,
+        16,
+        .6,
+        0,
+        false);
+      }
+      &.killed {
+        &:before {
+          @include spriteSpirit('zombie-4-death',
+          $zombie4SpriteDeath,
+          true,
+          497px,
+          6416px,
+          16,
+          .6,
+          0,
+          false);
+          transform: translate(65px, 45px);
+        }
+      }
+    }
+    @if $i==5 {
+      &:before {
+        @include spriteSpirit('zombie-5',
+        $zombie5Sprite,
+        true,
+        386px,
+        6016px,
+        16,
+        .6,
+        0,
+        false);
+      }
+      &.killed {
+        &:before {
+          @include spriteSpirit('zombie-5-death',
+          $zombie5SpriteDeath,
+          true,
+          488px,
+          6240px,
+          16,
+          .6,
+          0,
+          false);
+          transform: translate(70px, 37px);
+        }
+      }
+    }
+    @if $i==6 {
+      &:before {
+        @include spriteSpirit('zombie-6',
+        $zombie6Sprite,
+        true,
+        386px,
+        6464px,
+        16,
+        .6,
+        0,
+        false);
+      }
+      &.killed {
+        &:before {
+          @include spriteSpirit('zombie-6-death',
+          $zombie6SpriteDeath,
+          true,
+          510px,
+          6704px,
+          16,
+          .6,
+          0,
+          false);
+          transform: translate(75px, 44px);
+        }
+      }
+    }
+  }
+}
+
+// Strength Bar
+.strength-bar {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid #ffffff;
+  height: 5px;
+  border-radius: 14px;
+  opacity: 1;
+  transition: opacity .3s ease;
+  &.hide {
+    opacity: 0;
+  }
+  // Strength Bar Wide per Zombie
+  @for $i from 1 through 6 {
+    $width: $i * 15px;
+    .zombie-#{$i} & {
+      width: #{$width};
+    }
+  }
+  &:after {
+    @include fillPosition();
+    content: '';
+    background: red;
+    transition: width .3s ease;
+    display: block;
+    width: 0;
+  }
+  // Strength Bar Fill per Zombie
+  @for $i from 0 through 1 {
+    .zombie-1[data-strength="#{$i}"] & {
+      &:after {
+        @if $i==0 {
+          width: 0;
+        }
+        @if $i==1 {
+          width: 100%;
+        }
+      }
+    }
+  }
+  @for $i from 0 through 2 {
+    .zombie-2[data-strength="#{$i}"] & {
+      &:after {
+        @if $i==0 {
+          width: 0;
+        }
+        @if $i==1 {
+          width: 50%;
+        }
+        @if $i==2 {
+          width: 100%;
+        }
+      }
+    }
+  }
+  @for $i from 0 through 3 {
+    .zombie-3[data-strength="#{$i}"] & {
+      &:after {
+        @if $i==0 {
+          width: 0;
+        }
+        @if $i==1 {
+          width: 33%;
+        }
+        @if $i==2 {
+          width: 66%;
+        }
+        @if $i==3 {
+          width: 100%;
+        }
+      }
+    }
+  }
+  @for $i from 0 through 4 {
+    .zombie-4[data-strength="#{$i}"] & {
+      &:after {
+        @if $i==0 {
+          width: 0;
+        }
+        @if $i==1 {
+          width: 25%;
+        }
+        @if $i==2 {
+          width: 50%;
+        }
+        @if $i==3 {
+          width: 75%;
+        }
+        @if $i==4 {
+          width: 100%;
+        }
+      }
+    }
+  }
+  @for $i from 0 through 5 {
+    .zombie-5[data-strength="#{$i}"] & {
+      &:after {
+        @if $i==0 {
+          width: 0;
+        }
+        @if $i==1 {
+          width: 20%;
+        }
+        @if $i==2 {
+          width: 40%;
+        }
+        @if $i==3 {
+          width: 60%;
+        }
+        @if $i==4 {
+          width: 80%;
+        }
+        @if $i==5 {
+          width: 100%;
+        }
+      }
+    }
+  }
+  @for $i from 0 through 6 {
+    .zombie-6[data-strength="#{$i}"] & {
+      &:after {
+        @if $i==0 {
+          width: 0;
+        }
+        @if $i==1 {
+          width: 25%;
+        }
+        @if $i==2 {
+          width: 40%;
+        }
+        @if $i==3 {
+          width: 55%;
+        }
+        @if $i==4 {
+          width: 70%;
+        }
+        @if $i==5 {
+          width: 85%;
+        }
+        @if $i==6 {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Walk Speed
+@for $i from 1 through 6 {
+  $random-speed: $i + 10;
+  $animation-speed: $i / 2;
+  .walk-speed-#{$i} {
+    @if $i==1 {
+      animation-duration: $random-speed + s;
+      &:before {
+        animation-duration: $animation-speed + s;
+      }
+    }
+    @if $i==2 {
+      animation-duration: $random-speed + s;
+      &:before {
+        animation-duration: $animation-speed + s;
+      }
+    }
+    @if $i==3 {
+      animation-duration: $random-speed + s;
+      &:before {
+        animation-duration: $animation-speed + s;
+      }
+    }
+    @if $i==4 {
+      animation-duration: $random-speed + s;
+      &:before {
+        animation-duration: $animation-speed + s;
+      }
+    }
+    @if $i==5 {
+      animation-duration: $random-speed + s;
+      &:before {
+        animation-duration: $animation-speed + s;
+      }
+    }
+    @if $i==6 {
+      animation-duration: $random-speed + s;
+      &:before {
+        animation-duration: $animation-speed + s;
+      }
+    }
+  }
+}
+
+// Visibility Delay
+@for $i from 1 through 6 {
+  $random-speed: $i/1.5;
+  .walk-delay-#{$i} {
+    @if $i==1 {
+      animation-delay: $random-speed + s;
+    }
+    @if $i==2 {
+      animation-delay: $random-speed + s;
+    }
+    @if $i==3 {
+      animation-delay: $random-speed + s;
+    }
+    @if $i==4 {
+      animation-delay: $random-speed + s;
+    }
+    @if $i==5 {
+      animation-delay: $random-speed + s;
+    }
+    @if $i==6 {
+      animation-delay: $random-speed + s;
+    }
+  }
+}

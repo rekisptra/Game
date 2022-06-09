@@ -1,0 +1,191 @@
+<!-- 
+ Best in Debug view codepen.io/chasebank/debug/MRGYRO
+
+ There's a No-Spoiler version codepen.io/chasebank/pen/zXePrK
+-->
+<div id="particles-js"></div> 
+
+<div id="app" :class="{'showing-character' : $route.name == 'character' }" v-cloak>
+  [[[https://codepen.io/chasebank/pen/4d7a64125df76be18941c92c65487aa2]]]
+    
+  <transition :name="`transition--${transitionSlideDirection}-`">
+    <router-view :key="$route.fullPath"></router-view>
+  </transition>
+</div>
+
+<template id="template--spoiler-warning">
+  <main class="spoiler-warning--wrap">
+    <div class="spoiler-warning">
+      <h3>Spoiler Warning!</h3>
+      
+      <transition-group name="transition--fade-" tag="div" mode="out-in">
+        <div v-if="$parent.spoilersConfirmed == null || $parent.spoilersConfirmed == true" key="warning">
+          <p>This game has up-to-date info on Game of Thrones Season&nbsp;8 character&nbsp;deaths.</p>
+
+          <p>Don't continue unless you've watched the most&nbsp;recent&nbsp;episodes!</p>
+
+          <p>Are you ready to play?</p>
+
+          <div class="spoiler-confirmation--actions">
+            <button @click="$parent.spoilersConfirmed = false">No!</button>
+            <button @click="proceed">Yes</button>
+          </div>
+        </div>
+        
+        <div v-else key="denied">
+          <h4>That's ok  :)</h4>
+          <p>Now go watch the show!</p>
+        </div>
+      </transition-group>
+    </div>
+  </main>
+</template>
+
+<template id="template--game-instructions">
+  <main class="game-instructions--wrap">
+    <div class="game-instructions">
+      <h3>Instructions</h3>
+      
+      <p>Browse the characters (still among the living) and save your predictions for who LIVES&nbsp;or&nbsp;DIES!</p>
+      
+      <p>Check back after each episode to see if your prophecies&nbsp;were&nbsp;correct.</p>
+      
+      <ul>
+        <li>1 point for a correct prediction.</li>
+        <li>10 points optional extra credit for correctly predicting death&nbsp;&&nbsp;the&nbsp;killer.</li>
+      </ul>
+      
+      <router-link v-if="$parent.incompletedCharacters < 1" :to="{ name: 'predictions' }" tag="button">PLAY</router-link>
+      <router-link v-else :to="{ name: 'character', params: { id: $parent.incompletedCharacters[0].id }}" tag="button">PLAY</router-link>
+    </div>
+  </main>
+</template>
+
+<template id="template--predictions">
+  <main class="predictions" v-if="$parent.spoilersConfirmed">
+    <h3 class="score">{{ points }} {{ points == 1 ? 'Point' : 'Points' }}</h3>
+    <small>for now...</small>
+
+    <p>Check back after the next episode!</p>
+
+    <ul class="character-list" v-if="$parent.characters">
+      <character-li v-for="character in $parent.characters" :key="character.id" :character="character"></character-li>
+    </ul>
+
+    <p>valar dohaeris</p>
+  </main>
+</template>
+
+<template id="template--character-li">
+  <li class="character-li"
+      :class="{
+        'character-status--live' : character.status == 'alive',
+        'character-status--die' : character.status == 'dead',
+       }"
+      @click="focusCharacter">
+    <div class="character-li--prediction" v-if="thisSavedChar">
+      <svg v-if="userPredictedStatus == 'alive'" class="character-li--prediction-icon heart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262 263.5">
+        <path d="M195 0c-30.1 0-55.5 22.1-64 52.5C122.5 22.1 97.1 0 67 0 30 0 0 33.5 0 74.9c0 98.6 131 188.6 131 188.6s131-89.4 131-188.6C262 33.5 232 0 195 0z"/>
+      </svg>
+      <svg v-else xmlns="http://www.w3.org/2000/svg" viewBox="0 0 233.9 279" class="character-li--prediction-icon">
+        <path d="M117.4 0h-1C14.6.7-4.4 70.5.8 115.3c3.6 31.3 21.7 40.4 20.6 46.1-2.5 13.8-10-6.7-16.5 21.4s35 44.8 35 44.8 18.5-19 36.5-11C59.9 230.9 63.9 279 63.9 279H170s4-48.1-12.5-62.4c18-8.1 36.5 11 36.5 11s41.5-16.7 35-44.8-14-7.6-16.5-21.4c-1-5.7 17-14.8 20.6-46.1C238.3 70.5 219.3.7 117.4 0zm-76 178c-5.5-24.2-15.5-38.1-2-43.5 44.5-17.8 57 21.1 65.5 31.4 8.5 10.4-58 36.4-63.5 12.1zm97 49c-10.7 17.4-4.6-2.9-20.9-5.3h-.2v-.1c-.2 0-.3 0-.5.1-.2 0-.3 0-.5-.1v.1h-.2c-16.3 2.4-10.2 22.8-20.9 5.3-4.6-7.6 8.3-38.8 21.5-46.3 13.5 7.5 26.4 38.7 21.7 46.3zm54.1-49c-5.5 24.2-72-1.8-63.5-12.1 8.5-10.3 21-49.1 65.5-31.4 13.5 5.4 3.5 19.3-2 43.5z"/>
+      </svg>
+    </div>
+ 
+    <div class="character-li--photo--wrap"
+         :class="{
+        'prediction-correct' : userPredictedStatusCorrect,
+        'prediction-correct-extra' : correctKiller,
+        'prediction-wrong' : userPredictedStatusCorrect == false,
+       }">
+      <div class="character-li--photo" :style="{ 'background-image': `url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/106403/got-deadpool--${character.id}.jpg)` }"></div>
+    </div>
+    <span class="character-li--name">{{ character.name }}</span>
+  </li>
+</template>
+
+<template id="template--character" v-if="$parent.spoilersConfirmed">
+  <main class="character-item">    
+    <div class="character-item--photo--wrap" :style="{ 'background-image': `url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/106403/got-deadpool--${character.id}.jpg)` }"></div>
+    
+    <div class="character-item--content">
+      <h2>{{ character.name }}</h2>
+      
+      <h3 v-if="characterFate">{{ characterFate == 'dead' ? 'IS DEAD' : 'HAS SURVIVED'}}</h3>
+      
+      <div class="character-item--predictions" v-if="!characterFate">
+        <p>Will {{ character.IsFemale ? 'she' : 'he' }} Live or Die?<small>(1 pt)</small></p>
+        <label class="predictions-radio">
+          <input :name="`${character.name}-prediction`" type="radio" value="alive" v-model="character.prediction">
+          <span class="predictions-radio--label">
+            <svg class="predictions-radio--icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262 263.5">
+  <path d="M195 0c-30.1 0-55.5 22.1-64 52.5C122.5 22.1 97.1 0 67 0 30 0 0 33.5 0 74.9c0 98.6 131 188.6 131 188.6s131-89.4 131-188.6C262 33.5 232 0 195 0z"/>
+</svg>Live
+          </span>
+        </label>
+        <label class="predictions-radio">
+          <input :name="`${character.name}-prediction`" type="radio" value="dead" v-model="character.prediction">
+          <span class="predictions-radio--label">
+            <svg class="predictions-radio--icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 233.9 279" class="character-li--prediction-icon">
+        <path d="M117.4 0h-1C14.6.7-4.4 70.5.8 115.3c3.6 31.3 21.7 40.4 20.6 46.1-2.5 13.8-10-6.7-16.5 21.4s35 44.8 35 44.8 18.5-19 36.5-11C59.9 230.9 63.9 279 63.9 279H170s4-48.1-12.5-62.4c18-8.1 36.5 11 36.5 11s41.5-16.7 35-44.8-14-7.6-16.5-21.4c-1-5.7 17-14.8 20.6-46.1C238.3 70.5 219.3.7 117.4 0zm-76 178c-5.5-24.2-15.5-38.1-2-43.5 44.5-17.8 57 21.1 65.5 31.4 8.5 10.4-58 36.4-63.5 12.1zm97 49c-10.7 17.4-4.6-2.9-20.9-5.3h-.2v-.1c-.2 0-.3 0-.5.1-.2 0-.3 0-.5-.1v.1h-.2c-16.3 2.4-10.2 22.8-20.9 5.3-4.6-7.6 8.3-38.8 21.5-46.3 13.5 7.5 26.4 38.7 21.7 46.3zm54.1-49c-5.5 24.2-72-1.8-63.5-12.1 8.5-10.3 21-49.1 65.5-31.4 13.5 5.4 3.5 19.3-2 43.5z"/>
+      </svg>Die
+          </span>
+        </label>
+      </div>
+      
+      <transition name="transition--fade-" v-if="!characterFate">
+        <label v-if="character.prediction == 'dead'" class="killer-input-wrap">
+          <p>Who will kill {{ character.IsFemale ? 'her' : 'him' }}? <small>(OPTIONAL EXTRA CREDIT ~ 10 pts)</small></p>
+
+          <autocomplete-input :options="names" v-model="killer" @select="onOptionSelect" :value="character.killer">
+            <template slot="item" scope="option">{{ option.title }}</template>
+          </autocomplete-input>
+        </label>
+      </transition>
+      
+      <div class="prediction-actions">
+        <router-link
+           v-if="inCompletedCharIndex > 0 && !characterFate"
+           :to="{ params: { id: $parent.incompletedCharacters[inCompletedCharIndex - 1].id }}"
+           tag="button">
+              Back
+        </router-link>
+        <button v-else @click="$router.go(-1)">Back</button>
+        <router-link
+           v-if="inCompletedCharIndex > -1 && inCompletedCharIndex < $parent.incompletedCharacters.length - 1"
+           :to="{ params: { id: $parent.incompletedCharacters[inCompletedCharIndex + 1].id }}"
+           tag="button"
+           :disabled="!character.prediction">
+              Next
+        </router-link>
+        <button v-else-if="!characterFate" @click="save" :disabled="!character.prediction || characterFate">SAVE</button>
+        <small v-if="inCompletedCharIndex > -1 && $parent.incompletedCharacters.length > 1">{{ inCompletedCharIndex < $parent.incompletedCharacters.length - 1 ? `${$parent.incompletedCharacters.length - inCompletedCharIndex} more` : 'Last One!' }}</small>
+      </div>
+    </div>
+  </main>
+</template>
+
+<template id="template--autocomplete-input">
+  <div class="autocomplete-input-wrap">
+    <!-- fix for input event issues on mobile chrome https://github.com/vuejs/vue/issues/8231 -->
+    <input
+         :value="value"
+         class="killer-input"
+         @input="value = $event.target.value; onInput($event.target.value)"
+         @keyup.esc="isOpen = false"
+         @blur="isOpen = false"
+         @keydown.down="moveDown"
+         @keydown.up="moveUp"
+         @keydown.enter="select($event)">
+    <transition-group name="transition--fade-" tag="ul" v-if="isOpen && fOptions.length > 0" class="options-list">
+      <li v-for="(option, index) in fOptions.slice(0, 10)"
+          v-bind:key="option"
+          :class="{'highlighted': index === highlightedPosition}"
+          @mouseenter="highlightedPosition = index"
+          @mousedown="select">
+        <slot name="item" :title="option">
+      </li>
+    </transition-group>
+  </div>
+</template>
+ 

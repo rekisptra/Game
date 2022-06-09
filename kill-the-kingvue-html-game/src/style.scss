@@ -1,0 +1,952 @@
+@font-face {
+  font-family: 'AddLGBitmap09';
+  src: url('https://assets.codepen.io/217233/AddLGBitmap09.woff2') format('woff2'),
+    url('https://assets.codepen.io/217233/AddLGBitmap09.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+body {
+  background: black;
+  color: white;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'AddLGBitmap09';
+}
+
+.game_lose,
+.game_win {
+  position: absolute;
+  background: rgba(14, 3, 13, 0.94);
+  z-index: 99999;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: none;
+  
+  &.show {
+    display: block;
+  }
+  
+  .inner {
+    position: absolute;
+    width: 500px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    
+    
+    p {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+}
+
+#app {
+  background: url('https://assets.codepen.io/217233/ssBg.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  transition: all .1s;
+  position: relative;
+
+  $shake: 3px;
+
+  @keyframes shake {
+    0% {left:-$shake; top: $shake}
+    20%{left:$shake; top: -$shake;}
+    40%{left:$shake; top: $shake;}
+    60%{left:-$shake; top: -$shake;}
+    80%{left:$shake; top: $shake;}
+    100%{left: 0; top: 0px;}
+  }
+  &.pressed {
+    animation: shake .1s forwards;
+  }
+}
+
+.game {
+  &_intro {
+    background: rgba(14, 3, 13, 0.94);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 99;
+    transition: all .3s;
+
+    &.gamestarted {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &__inner {
+      position: absolute;
+      left: 0;
+      right: 0;
+      margin: auto;
+      top: 50%;
+      width: 680px;
+      transform: translateY(-50%);
+      text-align: center;
+      transition: all .3s;
+      font-size: 12px;
+      line-height: 30px;
+
+      .begin {
+        text-align: center;
+        margin-top: 80px;
+        cursor: pointer;
+        transition: all .3s;
+
+        &:hover {
+          color: #76ece2;
+        }
+      }
+
+      .dialogue {
+        float: left;
+        width: 60%;
+        background: black;
+        color: white;
+        border-radius: 20px;
+        padding: 20px 31px;
+        position: relative;
+      }
+
+      p {
+        text-align: left;
+        clear: both;
+      }
+
+      span {
+
+        display: block;
+        color: #76ece2;
+        font-size: 9px;
+        text-align: left;
+        margin-bottom: -11px;
+        text-transform: uppercase;
+      }
+
+      .king {
+        float: right;
+        width: 140px !important;
+      }
+
+
+      &.start {
+        transition: all 1s;
+        &.gamestarted {
+          opacity: 0;
+          pointer-events: none;
+        }
+      }
+
+      .continue {
+        position: absolute;
+        z-index: 1;
+        cursor: pointer;
+        right: 20px;
+        font-size: 10px;
+        top: 175px;
+
+        transition: all .3s;
+
+        &:hover {
+          color: #76ece2;
+        }
+      }
+
+      &.end {
+        opacity: 1;
+        pointer-events: all;
+        transition: all 1s 1s;
+
+        .continue {
+          opacity: 1;
+          transition: all .3s 6s;
+        }
+
+        &.gamestarted {
+          opacity: 0;
+
+          .continue {
+            opacity: 0;
+
+          }
+        }
+      }
+
+      &.gamestarted {
+        //opacity: 0;
+        pointer-events: none;
+      }
+
+      img:nth-of-type(1) {
+        width: 400px;
+        image-rendering: pixelated;
+      }
+
+
+      img:nth-of-type(2) {
+        position: relative;
+        left: 0px;
+      }
+
+      img:nth-of-type(2) {
+        cursor: pointer;
+        margin-top: 40px;
+      }
+    }
+  }
+
+  &_inner {
+    &__tooltip {
+      width: 390px;
+      margin: 0 auto;
+      text-align: left;
+      position: absolute;
+      top: calc(50% + 240px);
+      left: 0;
+      right: 0;
+      margin: auto;
+      opacity: 0;
+      transition: all .3s;
+
+      &.active {
+        opacity: 1;
+      }
+
+      .smash {
+        width: 100%;
+        text-align: center;
+        margin-top: 23px;
+        font-size: 9px;
+      }
+
+      .space {
+        width: 390px;
+        margin-top: 50px;
+        height: 50px;
+        background: white;
+        position: relative;
+        top: 0;
+        border-radius: 6px;
+        box-shadow: 0 10px #d6d6d6;
+        animation: press2 .1s infinite;  
+
+        @keyframes press2{
+          0% {box-shadow: 0 10px #d6d6d6; top: 0px;}
+          100% {box-shadow: 0 0px #d6d6d6; top:10px;}
+        }
+      }
+    }
+
+    &__footer {
+      position: fixed;
+      left: 50px;
+      font-size: 7px;
+      z-index: 2;
+      bottom: 40px;
+      width: calc(100% - 100px);
+
+      .madeby {
+        position: relative;
+        top: 50px;
+      }
+
+      .resources {
+        float: right;
+
+        div {
+          margin: 0 0 10px 0;
+          font-size: 12px;
+          img {
+            position: relative;
+            top: 3px;
+            margin-right: 8px;
+          }
+        }
+      }
+
+      a {
+        color: #d0295f;
+        text-decoration: none;
+      }
+    }
+    &__left {
+      text-align: center;
+      float: left;
+      position: relative;
+      width: calc(100%);
+      height: 100vh;
+
+      .buttons {
+        float: right;
+        padding: 50px;
+
+        img {
+          width: 32px;
+          float: left;
+          margin-left: 12px;
+          cursor: pointer;
+
+          &.off {
+            opacity: 0.3;
+          }
+        }
+      }
+      .logo {
+        padding: 50px;
+        float: left;
+      }
+
+
+
+      .ui {
+        width: 100%;
+
+        &_spaces {
+          font-size: 24px;
+          margin-bottom: 7px;
+        }
+
+        &_progress {
+          width: 500px;
+          margin: 0 auto;
+          text-align: left;
+          position: absolute;
+          top: calc(50% - 300px);
+          left: 0;
+          right: 0;
+          margin: auto;
+          &__stage {
+            font-size: 9px;
+            margin-bottom: 11px;
+          }
+
+
+          &__bar {
+            width: 100%;
+            position: relative;
+
+            .inner {
+              background: url('https://assets.codepen.io/217233/ktkProgressInner.png');
+              height: 7px;
+              width: calc(100% - 6px);
+              background-size: 494px 7px;
+              position: absolute;
+              top: 10px;
+              z-index: 1;
+              left: 3px;
+              transition: all .4s;
+              max-width: 494px;
+            }
+
+            .outer {
+              background: url('https://assets.codepen.io/217233/ktkProgressOuter.png');
+              height: 12px;
+              width: 100%;
+              background-size: 500px 12px;
+              position: absolute;
+              top: 8px;
+            }
+          }
+
+          &__icons {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+            padding: 0 14px;
+
+            .icon {
+              flex-grow: 1;
+              text-align: center;
+
+              &_bg {
+                width: 28px;
+                height: 28px;
+                margin: auto;
+                background: url('https://assets.codepen.io/217233/ktkStageLocked.png');
+
+                &.active {
+                  &:after {
+                    width: 10px;
+                    height: 10px;
+                    content: '▲';
+                    display: block;
+                    position: relative;
+                    top: 31px;
+                    left: 9px;
+                    font-size: 10px;
+                  }
+                }
+
+                &.complete {
+                  background: url('https://assets.codepen.io/217233/ktkStageComplete.png');
+                }
+              }
+            }
+          }
+        }
+
+        &_presses {
+          font-size: 12px;
+          opacity: 0.4;
+        }
+      }
+      .center {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 390px;
+
+        .player_sprite,
+        .enemy_sprite {
+          width: 150px;
+          height: 150px;
+          animation: idle .5s steps(7, end) infinite;
+          transform: scale(5);
+          image-rendering: pixelated;
+
+          &.pressed {
+            animation: attack .15s steps(3, end);
+          }
+        }
+
+        .characters {
+          width: 400px;
+          margin: 80px auto;
+
+          .stand {
+            width: 100%;
+            height: 100px;
+            background: #141627;
+            border-radius: 100%;
+            position: absolute;
+            bottom: -20px;
+            left: 9px;
+          }
+
+
+          .player {
+            z-index: 1;
+            position: relative;
+            left: 10px;
+            top: 60px;
+            transition: all 1s .3s;
+
+            &.run {
+              left: 400px;
+              opacity: 0;
+            }
+
+            .stats {
+              position: absolute;
+              left: -110px;
+              text-align: left;
+              transform: translateY(4px);
+              font-size: 8px;
+              animation: health 2s infinite;
+
+              span {
+                font-size: 6px;
+                opacity: 0.75;
+                display: block;
+                padding-left: 24px;
+                padding-top: 4px;
+              }
+
+              div {
+                margin-bottom: 10px;
+
+                img {
+                  position: relative;
+                  margin-right: 4px;
+                  top: 3px;
+                }
+              }
+            }
+          }
+
+          .enemy {
+            position: relative;
+            top: -134px;
+            left: -40px;
+            transition: all .3s;
+
+
+
+            &.run {
+              opacity: 0;
+            }
+          }
+
+          .enemy,
+          .player {
+            width: 50%;
+            float: left;
+          }
+        }
+
+        .enemy {
+          width: 100px;
+
+          &_hit,
+          &_gold,
+          &_xp {
+            position: absolute;
+            left: 98px;
+            top: 40px;
+            z-index: 1;
+            opacity: 0;
+
+            &.pressed {
+              animation: hit .15s forwards;
+            }
+          }
+
+          &_gold {
+            &.killed {
+              animation: hit .3s .1s forwards;
+            }
+          }
+
+          &_xp {
+            left: 0;
+            right: 0;
+
+            &.killed {
+              animation: hit .3s .12s forwards;
+            }
+          }
+
+          &_sprite {
+            background: url('https://assets.codepen.io/217233/ssEnemyIdle_1.png');
+            animation: none;
+            width: 200px;
+            animation: enemyIdle .5s steps(7, end) infinite;
+            transform: scaleX(-5) scaleY(5);
+            position: relative;
+
+            &.boss {
+              background: url('https://assets.codepen.io/217233/ktkTrostIdle.png');
+              animation: bossIdle 1s steps(7, end) infinite;
+              width: 160px;
+              top: 10px;
+              left: 40px;
+              height: 105px;
+              filter: hue-rotate(0deg) !important;
+
+              &.pressed {
+                animation: bossHit .15s steps(3, end);
+              }
+
+              &.killed {
+                animation: bossKilled .8s steps(5, end) ;
+              }
+            }
+
+            &.pressed {
+              animation: enemyHit .15s steps(3, end);
+            }
+
+            &.killed {
+              animation: enemyKilled .8s steps(5, end) ;
+            }
+          }
+
+          &_health {
+            width: 190px;
+            height: 12px;
+            position: absolute;
+            left: 0;
+            font-size: 13px;
+            right: 0;
+            line-height: 39px;
+            border-radius: 10px;
+            top: 10px;
+            padding-top: 0px;
+            margin: auto;
+            background: url(https://assets.codepen.io/217233/ktkEnemyHealth.png);
+            animation: health 2s infinite;
+
+            &_stats {
+              font-size: 7px;
+              padding-top: 6px;
+              text-align: left;
+
+              .name {
+                float: left;
+              }
+
+              .level {
+                float: right;
+              }
+            }
+
+            &_inner {
+              position: absolute;
+              left: 4px;
+              top: 3px;
+              height: 5px;
+              border-radius: 10px;
+              transition: all .1s;
+              max-width: 182px;
+              background: url(https://assets.codepen.io/217233/ktkEnemyHealthInner.png);
+            }
+          }
+        }
+
+
+      }
+
+      & .spaceBar {
+        width: 390px;
+        margin-top: 50px;
+        height: 50px;
+        background: white;
+        position: relative;
+        top: 0;
+        border-radius: 6px;
+        box-shadow: 0 10px #d6d6d6;
+        animation: press2 .1s forwards;
+
+        @keyframes health {
+          0% {    top: 10px;}
+          50% {    top: 13px;}
+          100% {    top: 10px;}
+        }
+
+        @keyframes idle {
+          0% {
+
+            background: url('https://assets.codepen.io/217233/ssIdle.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ssIdle.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes attack {
+          0% {
+            background: url('https://assets.codepen.io/217233/ssAttack1.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ssAttack1.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes enemyIdle {
+          0% {
+            background: url('https://assets.codepen.io/217233/ssEnemyIdle_1.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ssEnemyIdle_1.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes bossIdle {
+          0% {
+            background: url('https://assets.codepen.io/217233/ktkTrostIdle.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ktkTrostIdle.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes bossHit {
+          0% {
+            background: url('https://assets.codepen.io/217233/ktkTrostHit.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ktkTrostHit.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes bossKilled {
+          0% {
+            background: url('https://assets.codepen.io/217233/ktkTrostKilled.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ktkTrostKilled.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes enemyHit {
+          0% {
+            background: url('https://assets.codepen.io/217233/ssEnemyHit_1.png');
+            background-position: 0% 0;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ssEnemyHit_1.png');
+            background-position: 100% 0;
+          }
+        }
+
+        @keyframes enemyKilled {
+          0% {
+            background: url('https://assets.codepen.io/217233/ssEnemyDeath_1.png');
+            background-position: 0% 0;
+            opacity: 1;
+          }
+
+          100% {
+            background: url('https://assets.codepen.io/217233/ssEnemyDeath_1.png');
+            background-position: 100% 0;
+            opacity: 0;
+          }
+        }
+
+        @keyframes hit {
+          0% {    top: 40px;opacity: 0}
+          100% {    top: -30px;opacity:1}
+        }
+
+        @for $i from 1 through 20 {
+          @keyframes hit-#{$i} {
+
+            $left: random(400) + 80 + px;
+            $bottom: random(100) + px;
+            0% {
+              left: 0px;
+              bottom: 0px;
+              opacity: 1;
+
+            }
+            60% {
+              opacity:1;
+            }
+
+            100% {
+              left: $left;
+              bottom: $bottom;
+              opacity:0;
+            }
+          }
+        }
+
+
+        &.pressed {
+          animation: press .05s forwards;
+
+        }
+      }
+    }
+
+    &__right {
+      float: right;
+      position: fixed;
+      width: 720px;
+      background: #160917;
+      left: 0;
+      right: 0;
+      border-radius: 10px;
+      border: 2px solid white;
+      z-index: 999;
+      top: 50%;
+      box-shadow: 0 0 0 1160px #0a0209d1;
+      margin: auto;
+      transform: translateY(-50%);
+
+      p {
+        text-align: left;
+        font-size: 10px;
+        padding: 26px;
+      }
+
+      .xp {
+        padding: 0 26px;
+        font-size: 12px;
+      }
+
+      .nextPhase {
+        background: #73256a;
+        width: calc(100% - 52px);
+        margin: 0 26px 26px 26px;
+        text-align: center;
+        font-size: 12px;
+        padding: 20px 0;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 4px #3d074e;
+      }
+
+      .upgrades {
+        padding: 24px;
+
+
+        h2 {
+          text-transform: capitalize;
+          margin-bottom: 12px;
+          font-weight: normal;
+          font-size: 14px;
+        }
+
+        &_upgrade {
+          .upgrade {
+            border: 2px solid white;
+            padding: 12px;
+            border-radius: 6px;
+            opacity: 0.6;
+            transition: all .3s;
+            pointer-events: none;
+            position: relative;
+            margin-bottom: 6px;
+            font-size: 11px;
+            
+            &:hover {
+              background: #ffffff0f;
+              padding: 12px 12px 12px 20px;
+            }
+
+            &.max {
+              background: black;
+              pointer-events: none;
+
+              &:after {
+                content: 'max';
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                text-align: center;
+                margin: auto;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 100%;
+                text-transform: uppercase;
+              }
+
+              div {
+                opacity: 0.12;
+              }
+            }
+
+            &.bought {
+              pointer-events: none !important;
+              background: green;
+              opacity: 0.2 !important;
+            }
+
+            .name {
+              font-size: 11px;
+              margin-bottom: 5px;
+              text-transform: uppercase;
+            }
+
+            .description {
+              font-size: 8px;
+              opacity: 0.5;
+              margin-bottom: 4px;
+            }
+
+            .cost {
+              font-size: 8px;
+              color: red;
+              transition: all .3s;
+              margin-bottom: 3px;
+            }
+
+            .level {
+              font-size: 8px;
+              position: absolute;
+              right: 12px;
+              bottom: 12px;
+            }
+
+            .effect {
+              font-size: 8px;
+            }
+
+            &.available {
+              opacity: 1;
+              pointer-events: all;
+              cursor: pointer;
+
+              .cost {
+                color: green;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+      .timer {
+        width: 128px;
+        margin: 0 auto;
+        text-align: left;
+        position: absolute;
+        top: calc(50% - 400px);
+        left: 4px;
+        right: 0;
+        font-size: 14px;
+        margin: auto;
+
+
+        &_inner {
+          position: relative;
+          top: -40px;
+          text-align: center;
+
+          div {
+            display: inline-block;
+            width: 28px;
+            position: relative;
+            margin: 0 3px 0;
+            &:after {
+              display: block;
+              content: ':';
+              position: absolute;
+              right: -11px;
+              top: 50%;
+              transform: translateY(-50%);
+            }
+          }
+
+          .ms {
+            font-size: 9px;
+            opacity: 0.7;
+            width: 22px;
+
+            &:after {
+              display: none;
+            }
+          }
+        }
+      }

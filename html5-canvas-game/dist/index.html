@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>🎮 Canvas Game</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Sniglet:400,800'><style>
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Sniglet", cursive;
+  color: hotpink;
+  overflow: hidden;
+}
+
+header {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -40%);
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-weight: 600;
+  margin: 50px 0;
+  font-size: 4rem;
+  color: hotpink;
+  text-shadow: -1px -1px 0 #c546c5, 1px -1px 0 #c546c5, -1px 1px 0 #c546c5, 1px 1px 0 #c546c5, 0 0 100px white;
+}
+
+.intro {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -40%);
+  z-index: 2;
+  text-align: center;
+}
+
+.start {
+  background: hotpink;
+  border: none;
+  padding: 6px 50px;
+  border-radius: 60px;
+  font-family: "Sniglet", cursive;
+  font-size: 1.5rem;
+  color: #fff;
+  cursor: pointer;
+  text-shadow: 0 0 5px #c546c5;
+  border: 2px solid rgba(197, 70, 197, 0.3);
+  box-shadow: 0 0 100px rgba(255, 255, 255, 0.3);
+  will-change: transform;
+  transition: transform 0.2s;
+}
+.start:hover {
+  transform: scale(1.16);
+  transition: transform 0.2s;
+}
+
+.progress {
+  position: absolute;
+  left: 50%;
+  top: 35%;
+  width: 100%;
+  transform: translate(-50%, -35%);
+  z-index: 2;
+  padding: 0 30px;
+  line-height: 1.35;
+  text-align: center;
+  font-size: 1.75rem;
+  color: purple;
+  opacity: 0;
+  transition: opacity 0.5s;
+  transition: transform 0.2s;
+}
+.progress.active {
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+
+.levels {
+  position: absolute;
+  left: 50%;
+  top: 47%;
+  width: 100%;
+  transform: translate(-50%, -47%);
+  padding: 0 30px;
+  text-align: center;
+  display: none;
+}
+@media only screen and (max-width: 375px) {
+  .levels {
+    top: 52%;
+    transform: translate(-50%, -52%);
+  }
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  opacity: 0.5;
+  transition: opacity 0.5s;
+}
+#canvas.active {
+  opacity: 1;
+  transition: opacity 1s;
+}
+</style>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="intro">
+  <h1>Bubble Pop!</h1>
+  <button class="start">Start</button>
+</div>
+<div class="progress"></div>
+<div class="levels">
+  <h1></h1>
+</div>
+<div id='canvas-wrapper'>
+  <canvas id="canvas" width="800" height="400">
+			Sorry, your browser doesn't support Canvas.
+		</canvas>
+</div>
+
+<!-- github corner -->
+<a href="https://github.com/ryanwellsdotcom/bubble-pop" class="github-corner" target="_blank" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#64CEAA; color:#fff; position: absolute; top: 0; border: 0; right: 0;z-index:1000" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+<!-- partial -->
+  <script>
+  const BP = {
+  ui: {
+    progressElm: document.querySelector(".progress"),
+    introElm: document.querySelector(".intro"),
+    levelsElm: document.querySelector(".levels"),
+    levelMsg: document.querySelector(".levels").firstElementChild,
+    startBtn: document.querySelector(".start"),
+    canvas: document.getElementById("canvas"),
+    canvasWrapper: document.getElementById("canvas-wrapper"),
+    size: function () {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    },
+    loadSounds: function () {
+      //sound type
+      const sounds = {
+        high: new Audio("http://ryanwells.com/bubble-pop/dist/audio/bubble-pop-high.mp3"),
+
+        med: new Audio("http://ryanwells.com/bubble-pop/dist/audio/bubble-pop-med.mp3"),
+
+        low: new Audio("http://ryanwells.com/bubble-pop/dist/audio/bubble-pop-low.mp3") };
+
+
+      // set volume for each sound
+      Object.values(sounds).forEach(sound => {
+        sound.volume = 0.25;
+      });
+      return sounds;
+    },
+    ctx: document.getElementById("canvas").getContext("2d"),
+    mouse: {
+      x: undefined,
+      y: undefined } },
+
+
+  util: {
+    fadeIn: function (elem, ms) {
+      if (!elem) return;
+
+      elem.style.opacity = 0;
+      elem.style.filter = "alpha(opacity=0)";
+      elem.style.display = "inline-block";
+      elem.style.visibility = "visible";
+
+      if (ms) {
+        let opacity = 0;
+        const timer = setInterval(function () {
+          opacity += 50 / ms;
+          if (opacity >= 1) {
+            clearInterval(timer);
+            opacity = 1;
+          }
+          elem.style.opacity = opacity;
+          elem.style.filter = `alpha(opacity=${opacity * 100})`;
+        }, 50);
+      } else {
+        elem.style.opacity = 1;
+        elem.style.filter = "alpha(opacity=1)";
+      }
+    },
+    fadeOut: function (elem, ms) {
+      if (!elem) return;
+
+      if (ms) {
+        let opacity = 1;
+        const timer = setInterval(function () {
+          opacity -= 50 / ms;
+          if (opacity <= 0) {
+            clearInterval(timer);
+            opacity = 0;
+            elem.style.display = "none";
+            elem.style.visibility = "hidden";
+          }
+          elem.style.opacity = opacity;
+          elem.style.filter = `alpha(opacity=${opacity * 100})`;
+        }, 50);
+      } else {
+        elem.style.opacity = 0;
+        elem.style.filter = "alpha(opacity=0)";
+        elem.style.display = "none";
+        elem.style.visibility = "hidden";
+      }
+    },
+    randomColorGen: function () {
+      let r = Math.floor(Math.random() * 255) + 1;
+      let g = Math.floor(Math.random() * 255) + 1;
+      let b = Math.floor(Math.random() * 255) + 1;
+      let color = `${r}, ${g}, ${b}`;
+      return color;
+    } },
+
+  bubblesQueue: [],
+  bubble: function (x, y, dx, dy, radius, colors) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+    this.origRadius = radius;
+    this.radius = radius;
+    this.minRadius = radius;
+    this.colors = colors;
+
+    this.draw = function () {
+      BP.ui.ctx.beginPath();
+      // x, y, radius, Math.PI / 180 * startAngle, Math.PI / 180 * endAngle, anticlockwise
+      BP.ui.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+      BP.ui.ctx.fillStyle = colors;
+      BP.ui.ctx.fill();
+    };
+
+    this.update = function () {
+      // boundry detection
+      if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
+        this.dx = -this.dx; // move left
+      }
+      if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
+        this.dy = -this.dy; // move up
+      }
+      this.x += this.dx; // move right
+      this.y += this.dy; // move down
+
+      /* 
+      interactivity: 
+      positive numbers check for bubbles that are left or above the mouse. 
+      negative numbers check for bubbles that are right or below the mouse 
+      */
+      if (
+      BP.ui.mouse.x - this.x < this.radius &&
+      BP.ui.mouse.x - this.x > -this.radius &&
+      BP.ui.mouse.y - this.y < this.radius &&
+      BP.ui.mouse.y - this.y > -this.radius &&
+      this.radius != 0)
+      {
+        this.radius += BP.gamePlay.bubbleExpansionRate; // enlarge bubble
+        if (this.radius > BP.gamePlay.maxExpansion) {
+          this.destroy(this.origRadius);
+        }
+      } else if (this.radius > this.minRadius && this.radius != 0) {
+        this.radius -= BP.gamePlay.bubbleExpansionRate; // shrink bubble
+        BP.ui.mouse.x = 0;
+        BP.ui.mouse.y = 0;
+      }
+
+      // redraw each time bubble.update() is called
+      this.draw();
+    },
+    this.destroy = function (origRadius) {
+      BP.gamePlay.playSound(origRadius);
+      this.radius = 0;
+      this.x = -10;
+      this.y = -10;
+      this.dx = 0;
+      this.dy = 0;
+      BP.gamePlay.bubblesPoppedPerLevel += 1;
+      BP.gamePlay.bubblesPoppedTotal += 1;
+
+      // check if the last bubble was popped
+      BP.gamePlay.checkProgress();
+    };
+  },
+  bubbleMultiplier: function () {
+    this.bubblesQueue = [];
+
+    // on resize make a prorated amount of bubbles each level based on current progress
+    let bubbleNums =
+    this.gamePlay.bubbleQnty - BP.gamePlay.bubblesPoppedPerLevel;
+
+    // random bubbles
+    for (let i = 0; i < bubbleNums; i++) {
+      // random bubble size
+      let radius = Math.floor(Math.random() * BP.gamePlay.maxRadius) + 25;
+      let x = Math.random() * (innerWidth - radius * 2) + radius;
+      let y = Math.random() * (innerHeight - radius * 2) + radius;
+      let dx = (Math.random() - 0.5) * BP.gamePlay.speed;
+      let dy = (Math.random() - 0.5) * BP.gamePlay.speed;
+
+      // random opacity for each bubble
+      let a = Math.random() * (1 - 0.15) + 0.15;
+      let colors = `rgba(${BP.util.randomColorGen()} , ${a})`;
+
+      const args = [x, y, dx, dy, radius, colors];
+
+      // instantiate new bubbles and store in array
+      this.bubblesQueue.push(new BP.bubble(...args));
+    }
+  },
+  animate: function () {
+    // animate bubble
+    requestAnimationFrame(BP.animate); // recursive callback
+
+    // clear last position
+    BP.ui.ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+    // call bubble functions
+    BP.bubblesQueue.forEach(function (item, i) {
+      BP.bubblesQueue[i].update();
+    });
+  },
+  gamePlay: {
+    level: 0,
+    bubbleQnty: 50, // 50 to start as example
+    bubblesPoppedPerLevel: 0,
+    bubblesPoppedTotal: 0,
+    bubbleExpansionRate: 5,
+    speed: 8,
+    maxRadius: 45,
+    maxExpansion: 150,
+    setMouseCoords: function (event) {
+      BP.ui.mouse.x = event.x;
+      BP.ui.mouse.y = event.y;
+    },
+    start: function () {
+      BP.gamePlay.level = 1;
+      // track mouse
+      BP.ui.canvasWrapper.addEventListener(
+      "mousemove",
+      function (event) {
+        // get mouse position
+        event.preventDefault();
+        event.stopPropagation();
+        BP.gamePlay.setMouseCoords(event);
+      },
+      false);
+
+
+      BP.ui.canvasWrapper.addEventListener(
+      "click",
+      function (event) {
+        // get mouse position
+        event.preventDefault();
+        event.stopPropagation();
+        BP.gamePlay.setMouseCoords(event);
+      },
+      false);
+
+
+      BP.gamePlay.speed = 3; // start off for level 1
+      BP.gamePlay.bubbleQnty = 8; // start off for level 1
+      BP.ui.canvas.classList.add("active"); // increase opacity of canvas
+      BP.util.fadeOut(BP.ui.introElm, 200); // fade out intro
+      BP.bubbleMultiplier(); // make bubbles
+      BP.gamePlay.stopwatch.startTimer();
+    },
+    stopwatch: {
+      startTime: null,
+      endTime: null,
+      duration: 0,
+      startTimer: function () {
+        this.startTime = new Date();
+      },
+      stopTimer: function () {
+        this.endTime = new Date();
+      },
+      resetTimer: function () {
+        this.startTime = null;
+        this.endTime = null;
+        this.duration = 0;
+      },
+      showDuration: function () {
+        let time = (this.endTime.getTime() - this.startTime.getTime()) / 1000;
+        const secs = parseInt(time, 10);
+        let minutes = Math.floor(secs / 60);
+        let seconds = secs - minutes * 60;
+        let formatTime;
+        if (minutes > 0) {
+          let onesPlace = seconds < 10 ? "0" : "";
+          formatTime = `${minutes}:${onesPlace}${seconds}!`;
+        } else {
+          formatTime = `${seconds} seconds!`;
+        }
+        return formatTime;
+      } },
+
+    checkProgress: function () {
+      if (this.bubblesPoppedPerLevel === this.bubbleQnty) {
+        BP.gamePlay.stopwatch.stopTimer();
+        BP.gamePlay.level += 1; // increment level
+        BP.ui.canvas.classList.remove("active"); // reduce canvas opacity
+        this.showHideLevelMsg();
+      }
+    },
+    showHideLevelMsg: function () {
+      BP.ui.progressElm.innerHTML = `${
+      this.bubblesPoppedPerLevel
+      } bubbles popped in ${BP.gamePlay.stopwatch.showDuration()}`;
+      this.bubblesPoppedPerLevel = 0; // reset counter
+      BP.gamePlay.stopwatch.resetTimer();
+
+      // random RGB values
+      let color = `color:rgba(${BP.util.randomColorGen()} , 1)`;
+      BP.ui.levelMsg.setAttribute("style", color);
+      BP.ui.levelMsg.innerHTML = `Level ${BP.gamePlay.level}`;
+
+      // popped bubble count and elapsed time message
+      const delayShowProgress = setTimeout(() => {
+        clearTimeout(delayShowProgress);
+
+        // fade in progress message
+        BP.util.fadeIn(BP.ui.progressElm, 800);
+
+        const delayHideProgress = setTimeout(() => {
+          clearTimeout(delayHideProgress);
+
+          // fade out progress message while fading in level message
+          BP.util.fadeOut(BP.ui.progressElm, 600);
+        }, 4800);
+      }, 200);
+
+      // level number indicator
+      const delayShowLevel = setTimeout(() => {
+        clearTimeout(delayShowLevel);
+
+        // fade in level message
+        BP.util.fadeIn(BP.ui.levelsElm, 800);
+
+        const delayHideLevel = setTimeout(() => {
+          clearTimeout(delayHideLevel);
+
+          // fade out level message and start next level
+          BP.util.fadeOut(BP.ui.levelsElm, 600);
+          this.nextLevel();
+        }, 3000);
+      }, 2000);
+    },
+    nextLevel: function () {
+      BP.gamePlay.speed += 0.5; // increase speed each level
+      //BP.gamePlay.bubbleExpansionRate += 0.5;
+      BP.gamePlay.bubbleQnty += 5; // increment bubbles by num for each level
+      if (BP.gamePlay.maxRadius + 15 < BP.gamePlay.maxExpansion) {
+        BP.gamePlay.maxExpansion -= 5; // reduce expansion size as game speeds up
+      }
+
+      const delayShowNext = setTimeout(() => {
+        clearTimeout(delayShowNext);
+
+        BP.bubbleMultiplier(); // make bubbles
+        BP.ui.canvas.classList.add("active"); // increase canvas opacity
+        BP.gamePlay.stopwatch.startTimer();
+      }, 800);
+    },
+    playSound: function (origRadius) {
+      this.sound = null;
+      if (origRadius <= 34) {
+        this.sound = BP.ui.loadSounds().high;
+      } else if (origRadius > 34 && origRadius <= 42) {
+        this.sound = BP.ui.loadSounds().med;
+      } else {
+        this.sound = BP.ui.loadSounds().low;
+      }
+      this.sound.play();
+    } },
+
+  bind: function () {
+    // start game
+    this.ui.startBtn.addEventListener("click", this.gamePlay.start);
+
+    // make new bubbles on resize
+    window.addEventListener("resize", function () {
+      BP.ui.canvas.width = window.innerWidth;
+      BP.ui.canvas.height = window.innerHeight;
+      if (BP.gamePlay.bubblesPoppedPerLevel != 0 || BP.gamePlay.level === 0) {
+        BP.bubbleMultiplier();
+      }
+    });
+  },
+  init: function () {
+    this.ui.size(); // set initial size
+    this.ui.loadSounds();
+    this.bubbleMultiplier(); // make initial bubbles on load
+    this.animate(); // move bubbles around screen
+    this.bind(); // bind event handlers
+  } };
+
+BP.init();
+</script>
+
+</body>
+</html>

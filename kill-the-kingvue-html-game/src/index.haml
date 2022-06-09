@@ -1,0 +1,126 @@
+#app{":class" => "{'pressed': pressed}"}
+  %audio{:controls => "", :crossorigin => "anonymous", :style => "display: none;"}
+    %source{:src => "https://assets.codepen.io/217233/ktkBgAudio.mp3", :type => "audio/mp3"}
+  .game
+    .game_lose{":class" => "{'show': gameover}"}
+      .inner
+        %h1 YOU RAN OUT OF TIME!
+        %p King Trost was victorious. Refresh to try again.
+        %p 
+          Be sure to 
+          %a{:href => 'https://www.codepen.io/jcoulterdesign'} follow me on Codepen 
+          for more pointless stuff.
+    .game_win{":class" => "{'show': gamewin}"}
+      .inner
+        %h1 YOU WIN!
+        %p King Trost was slain. Congratulations!
+        %p 
+          Be sure to 
+          %a{:href => 'https://www.codepen.io/jcoulterdesign'} follow me on Codepen 
+          for more pointless stuff.
+    .game_intro{":class" => "{'gamestarted': gameStarted}"}
+      .game_intro__inner.start{":class" => "{'gamestarted': introClicked}"}
+        %img{:src => 'https://assets.codepen.io/217233/ktkLogo.png'}
+        %br
+        %p.begin{'@click' => 'introClicked = !introClicked, audioController.play("crushyou")'} BEGIN GAME
+      .game_intro__inner.end{":class" => "{'gamestarted': !introClicked}"}
+        .dialogue
+          %span King Trost
+          %p HAHAHA, YOU HONESTLY THINK YOU CAN DEFEAT ME!? MY MEN WILL CRUSH YOU, BOY.
+          %p.continue{'@click' => 'introClicked = !introClicked, startGame()'} Continue
+        %img.king{:src => 'https://assets.codepen.io/217233/kingTrost.png'}
+    .game_inner
+      .game_inner__tooltip{":class" => "{'active': tooltip}"}
+        .space
+        .smash Smash the spacebar!
+      .game_inner__footer
+        .madeby
+          Made by 
+          %a{:href => 'https://www.codepen.io/jcoulterdesign', :target => '_blank'} Jamie Coulter
+        .resources
+          .ui_xp
+            %img{:src => 'https://assets.codepen.io/217233/ktkXpIxon.png'}
+            {{ xp }}xp
+      .game_inner__left
+        .buttons
+          %img{:src => 'https://assets.codepen.io/217233/ktkSfxButton.png', '@click' => 'audioController.sfxOn = !audioController.sfxOn', ":class" => "{'off': !audioController.sfxOn}"}
+          %img{:src => 'https://assets.codepen.io/217233/ktkBgButton.png', '@click' => 'toggleBg()', ":class" => "{'off': muteBg}"}
+        .logo
+          %img{:src => 'https://assets.codepen.io/217233/ktkLogo.png'}
+        .timer
+          %img{:src => 'https://assets.codepen.io/217233/ktkTimerBg.png'}
+          .timer_inner
+            .minutes
+              {{ minutes }}
+            .seconds
+              {{ seconds }}
+            .ms
+              {{ ms }}
+        .ui
+          .ui_progress
+            .ui_progress__stage
+              STAGE {{ stage }}
+            .ui_progress__bar
+              .inner{":style" => "{width: `${((500 / enemiesPerStage) * (enemiesDefeated + 1)) - ((500 / enemiesPerStage) / 2)}px`}"}
+              .outer
+            .ui_progress__icons
+              .icon{":key" => "enemies", "v-for" => "(enemies, index) in enemiesPerStage"}
+                .icon_bg{":class" => "{'complete': index < enemiesDefeated, 'active': index == enemiesDefeated}"}
+        .center
+          .characters
+            .player{":class" => "{'run': stageComplete}"}
+              .stats
+                .ui_strength
+                  %img{:src => 'https://assets.codepen.io/217233/ktkStrengthIcon.png'}
+                  {{ strength }} STR
+                  %br
+                .ui_intelligence
+                  %img{:src => 'https://assets.codepen.io/217233/ktkKnowledgeIcon.png'}
+                  {{ intelligence }} INT
+                .ui_speed
+                  %img{:src => 'https://assets.codepen.io/217233/ktkSpeedIcon.png'}
+                  {{ speed }} SPD
+
+              .player_sprite{":class" => "{'pressed': pressed}"}
+            .enemy{":class" => "{'run': stageComplete}"}
+              .enemy_sprite{":class" => "{'pressed': pressed, 'killed' : enemyKilled, 'boss' : boss}", ":style" => "{filter: `hue-rotate(${80 * (stage - 1)}deg)`}"}
+              .enemy_hit{":class" => "{'pressed': pressed}"}
+                {{ damage }}
+              .enemy_xp{":class" => "{'killed': enemyKilled}"}
+                %img{:src => 'https://assets.codepen.io/217233/ktkXpIxon.png'}
+                {{ xpGained }}xp
+              .enemy_health
+                .enemy_health_stats
+                  .name
+                    {{ enemy.name }}
+                  .level
+                    HP: {{ enemy.health }}
+                .enemy_health_inner{":style" => "{width: `${100 * (enemy.health / enemy.initHealth)}%`}"}
+                
+      .game_inner__right{"v-if" => "shoppingPhase"}
+        .timer
+          %img{:src => 'https://assets.codepen.io/217233/ktkTimerBg.png'}
+          .timer_inner
+            .minutes
+              {{ minutes }}
+            .seconds
+              {{ seconds }}
+            .ms
+              {{ ms }}
+        %p Spend your gold and experience on upgrades
+        .xp
+          %img{:src => 'https://assets.codepen.io/217233/ktkXpIxon.png'}
+          {{ xp }}xp
+        .upgrades
+          .upgrades_upgrade{":key" => "upgrades.name", "v-for" => "(upgrade, index) in upgrades"}
+            %h2 {{ index != 0 ? upgrade.type != upgrades[index - 1].type ? upgrade.type : '' : 'Skills' }}
+            .upgrade{":class" => "{'max' : upgrade.level > upgrade.maxLevel, 'available': upgrade.type == 'stat' ? xp >= upgrade.cost : gold >= upgrade.cost, 'bought': upgrade.bought}", '@click' => 'buy(index, upgrade.type, upgrade.stat);audioController.play("upgrade")', '@mouseenter' => 'audioController.play("hover")'}
+              .name {{ upgrade.names }}
+              .description {{ upgrade.descriptions }}
+              .cost 
+                Cost: {{ upgrade.cost }} {{ upgrade.type == "stat" ? 'xp' : 'gold' }}
+              .effect
+                +{{ upgrade.type == "stat" ? upgrade.increment : upgrade.damage }} {{ upgrade.metric }}
+              .level{"v-if" => "upgrade.type == 'stat'"}
+                Level: {{ upgrade.level }}
+        .nextPhase{'@click' => 'exitShoppingPhase'} Next round

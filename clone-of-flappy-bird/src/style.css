@@ -1,0 +1,27 @@
+@font-face {
+                font-family: 'Flappy Bird';
+                src: url('http://www.appcycle.me/flappy/fonts/FB.eot');
+                src: url('http://www.appcycle.me/flappy/fonts/FB.eot?#iefix') format('embedded-opentype'),
+                     url('http://www.appcycle.me/flappy/fonts/FB.woff') format('woff'),
+                     url('http://www.appcycle.me/flappy/fonts/FB.ttf') format('truetype'),
+                     url('fonts/FB.svg#04b_19regular') format('svg');
+                font-weight: normal;
+                font-style: normal;
+            }
+            body, html {
+                margin: 0px;
+                padding: 0px;
+                text-align: center;
+                height: 100%;
+            }
+            canvas {
+                margin-bottom: -4px;
+                max-height: 100%;
+                max-width: 100%;
+            }
+            iframe {
+                position: fixed;
+                top: 0px;
+                left: 50%;
+                margin-left: -76px;
+            }

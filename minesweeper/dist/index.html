@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Minesweeper</title>
+      <link href="https://fonts.googleapis.com/css?family=Space+Mono:400,700" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<header class="site-header" role="banner">
+  <div class="wrap">
+    <h1>minesweeper</h1>
+    <div class="legend">
+      <p><strong>flag:</strong> <code><span class="key">alt</span>+<span class="click">click</span></code></p>
+    </div>
+  </div>
+</header>
+<main class="site-main" role="main">
+  <div class="wrap">
+    <div id="board">
+      <div class="top">
+        <div id="scoreboard">
+          <div id="minecounter" class="counter"></div>
+          <div>
+            <div class="select-wrap">
+              <select name="level" id="level">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert" selected>Expert</option>
+              </select>
+            </div>
+            <button class="reset">🙂</button>
+          </div>
+          <div id="timer" class="counter"></div>
+        </div>
+        <div id="grid"></div>
+      </div>
+      <div class="bottom"></div>
+    </div>
+  </div>
+</main>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,233 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #FDE3A7;
+  -webkit-transition-duration: 0.5s; /* Safari */
+  transition-duration: 0.5s;
+}
+
+#container {
+
+}
+
+.game-narrative {
+  margin: 0 auto; /* Center the item vertically & horizontally */
+  position: fixed; /* Break it out of the regular flow */
+  top: 0; left: 0; bottom: 0; right: 0; /* Set the bounds in which to center it, relative to its parent/container */
+  
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  resize: both;
+  /* overflow: auto; */
+  
+  max-width: 700px;
+  flex-direction: column;
+  text-align: center;
+}
+
+.game-narrative-text {
+  font-family: 'Share Tech', sans-serif;
+  font-size: 2em;
+  margin: 10px;
+}
+
+.game-btn {
+  font-family: 'Share Tech', sans-serif;
+  font-size: 2em;
+  margin: 20px;
+  
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 20px;
+  background-color: #d35400;
+  padding: 10px 20px 10px 20px;
+  border: solid #F89406 2px;
+  text-decoration: none;
+  
+}
+
+.game-btn:hover {
+  background-color: #e67e22;
+  text-decoration: none;
+}
+
+.game-btn:focus {
+  outline:0;
+}
+
+#narrative-three-btns {
+  display: flex;
+  flex-flow: row;
+}
+
+.dramatic-text {
+  font-family: 'Trade Winds', cursive;
+  font-size: 3em;
+}
+
+.computer-threat {
+  font-family: 'Trade Winds', cursive;
+  font-size: 1.5em;
+  margin-top: 20px;
+  color: #c0392b;
+}
+
+#header {
+  text-align: center;
+  margin: 10px;
+  margin-top: 30px;
+  color: #c0392b;
+}
+
+#game-configuration {
+  
+  margin: 0 auto; /* Center the item vertically & horizontally */
+ 
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  resize: both;
+  
+}
+
+#identity-selection {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.identity {
+  margin: 0px 20px;
+}
+
+#identity-label {
+  color: #FFF;
+  font-family: 'Share Tech', sans-serif;
+  font-size: 2em;
+  text-align: center;
+  vertical-align: middle;
+  margin: 20px;
+}
+
+#game-grid {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.cell {
+  font-family: 'Gloria Hallelujah', cursive;
+  color: #FFFFFF;
+  background-color: #121a21;
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  font-size: 3em;
+  margin: 5px;
+  
+  border-radius: 10px;
+  /* "pop-out" effect */
+  box-shadow: 6px 6px 0px 0px #090d10;
+  -webkit-transition-duration: 0.5s; /* Safari */
+  transition-duration: 0.5s;
+}
+
+.cell:hover {
+  color: #e74c3c;
+  background-color: #34495e;
+}
+
+.cell-selected {
+  color: #c0392b;
+  transform: translate(3px,3px);
+  box-shadow: 3px 3px 0px 0px #000000;
+  background-color: #121a21;
+  
+}
+
+.cell-selected:hover {
+  /* Disabling hover on already selected cells */
+  color: #c0392b;
+  background-color: #121a21;
+}
+
+.cell-win {
+  color: #e74c3c;
+  background-color: #34495e;
+  transition: all 1s ease-in-out;
+  transform: scale(1.05);
+}
+
+.cell-win:hover {
+  /* Disabling hover on win animation cells */
+  background-color: #34495e;
+}
+
+#game-over {
+  color: #FFF;
+  font-family: 'Share Tech', sans-serif;
+  
+  margin: 0 auto; /* Center the item vertically & horizontally */
+  position: fixed; /* Break it out of the regular flow */
+  top: 0; left: 0; bottom: 0; right: 0; /* Set the bounds in which to center it, relative to its parent/container */
+  
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  resize: both;
+  /* overflow: auto; */
+  
+  max-width: 700px;
+  flex-direction: column;
+  text-align: center;
+}
+
+#game-end-heading {
+  font-size: 2em;
+  margin: 10px;
+}
+
+#game-end-subheading {
+  font-size: 1.5em;
+  margin: 10px;
+}
+
+#game-reset-btn {
+  font-family: 'Share Tech', sans-serif;
+  font-size: 2em;
+  margin: 20px;
+  
+  -webkit-border-radius: 8;
+  -moz-border-radius: 8;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 20px;
+  background-color: #d35400;
+  padding: 10px 20px 10px 20px;
+  border: solid #F89406 2px;
+  text-decoration: none;
+  
+}
+
+#game-reset-btn: hover {
+  background: #3cb0fd;
+  text-decoration: none;
+}

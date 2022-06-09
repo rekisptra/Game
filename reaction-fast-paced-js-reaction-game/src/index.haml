@@ -1,0 +1,202 @@
+.mask
+.loadingtext
+    loading please wait...
+.audiofixer
+    .audiofixer_inner
+        Click anywhere to initiate the awesome
+.main_menu
+    .shake
+        .loaded__inner
+            %img.a{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/countdown_circle.png'}
+            %svg.main_svg{"enable-background" => "new 0 0 422.979 47.998", :height => "47.998px", :space => "preserve", :version => "1.1", :viewbox => "0 0 422.979 47.998", :width => "422.979px", :x => "0px", :xmlns => "http://www.w3.org/2000/svg", "xmlns:xlink" => "http://www.w3.org/1999/xlink", :y => "0px"}
+                %g
+                    %path{:d => "M11.482,37.903"}
+                    %path{:d => "M10.753,37.903V7.214h7.708c0,0,9.662-0.551,9.662,8.1\r\n\t\ts-6.975,8.009-6.975,8.009l8.549,14.58", :fill => "none", :stroke => "#fff", "stroke-miterlimit" => "10"}
+                    %polyline{:fill => "none", :points => "83.028,8.039 69.211,8.039 69.211,21.903 69.524,21.903 \r\n\t\t81.586,21.903 69.211,21.903 69.211,37.153 83.028,37.153 \t", :stroke => "#fff", "stroke-miterlimit" => "10"}
+                    %polyline{:fill => "none", :points => "118.586,37.903 129.35,10.028 140.023,37.903 \t", :stroke => "#fff", "stroke-miterlimit" => "10"}
+                    %path{:d => "M194.564,10.028c0,0-2.004-2.5-6.853-2.5\r\n\t\tc-4.848,0-11.5,3.187-11.5,15.438s7.563,14.938,11.125,14.938s6.498-2.145,7.228-2.875", :fill => "none", :stroke => "#fff", "stroke-miterlimit" => "10"}
+                    %polyline{:fill => "none", :points => "228.686,7.966 249.024,7.966 238.855,7.966 238.855,37.903 \r\n\t", :stroke => "#fff", "stroke-miterlimit" => "10"}
+                    %line{:fill => "none", :stroke => "#fff", "stroke-miterlimit" => "10", :x1 => "287.254", :x2 => "287.254", :y1 => "7.214", :y2 => "37.903"}
+                    %path{:d => "M340.421,7.466c0,0-11.585-0.421-11.585,15.071\r\n\ts11.585,15.117,11.585,15.117s11.29,1.329,11.29-15.117S340.421,7.466,340.421,7.466z", :fill => "none", :stroke => "#EB7048", "stroke-miterlimit" => "10"}
+                    %polyline{:fill => "none", :points => "393.523,37.903 393.523,10.278 411.211,35.028 \r\n\t411.211,7.214 ", :stroke => "#fff", "stroke-miterlimit" => "10"}
+            %h1 A game by Jamie Coulter
+            .play 
+                .play_inner 
+                    %i.ion-mouse
+                    Click to start
+.reaction 
+    .mistake
+    .overlay
+    .tutorial
+        .tutorial_inner
+            .close_tutorial
+                %i.ion-close-round
+            %img.header{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/tutorial_header.png'}
+            .slider_wrapper
+                .slider_wrapper__inner
+                    .slide.slide_1
+
+                        %h2 CLICK THE NODES
+                        %img.t1{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/t1.png'}
+                        %p Power the reaction bar before the time runs out by clicking on the lit nodes before they decay. The faster you get the nodes, the more charge will be added to the reaction bar.
+                        .tutorial_inner__button
+                            next
+                    .slide.slide_2
+                        %h2 COLLECT POWER UPS
+                        %img.t9{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/t9.png'}
+                        %p Collect various powerups to help you win. There are three types. Shrink the grid, add extra time +2s and instant full multiplier!
+                        .tutorial_inner__button
+                            next
+                    .slide.slide_3
+                        %h2 GET COMBOS
+                        %img.t10{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/t10.png'}
+                        %p Increase your multiplier by hitting nodes consistently. The more you get in a row, the higher your multiplier will be. However, if you miss a node your multiplier is reset!
+                        .tutorial_inner__letsgo
+                            lets go
+    .summary
+        .summary_inner
+            %img.header{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/summary_header.png'}
+            .summary_stats
+                .st_nodes
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span.title Nodes
+                    %span.stat 0
+                    %span.time x 100
+                    %span.total 0
+                .st_powerups
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span.title Powerups
+                    %span.stat 0
+                    %span.time x 100
+                    %span.total 0
+                .st_timeremaining
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span.title Time remaining
+                    %span.stat 0
+                    %span.time x 100
+                    %span.total 0
+                .st_reactionbar
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span.title Reaction points
+                    %span.stat 0
+                    %span.time x 1
+                    %span.total 0
+                .st_gamepoints
+                    %span.title Game points
+                    %span.stat 0
+                .sum_share
+                    .sum_share__twitter
+                        %i.ion-social-twitter
+                        Share on Twitter
+                    .sum_share__codepen
+                        %a{:href => 'https://www.codepen.io/jcoulterdesign', :target => '_blank'}
+                            %i.ion-social-codepen
+                            Follow me on Codepen
+            .summary_inner__next
+                Next level
+    .gameover
+        .gameover_inner
+            %img.header{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_over_header.png'}
+            .go_stats
+                .go_level
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span Level
+                    %span.stat 0
+                .go_hits
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span Node hits
+                    %span.stat 0
+                .go_bonus
+                    %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                    %span Powerups
+                    %span.stat 0
+                .go_points
+                    %span Total score
+                    %span.stat_s 0
+                .go_share
+                    .go_share__twitter
+                        %i.ion-social-twitter
+                        Share on Twitter
+                    .go_share__codepen
+                        %a{:href => 'https://www.codepen.io/jcoulterdesign', :target => '_blank'}
+                            %i.ion-social-codepen
+                            Follow me on Codepen
+                    
+            .gameover_inner__button
+                try again
+    %section.countdown
+        %img{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/countdown_circle.png'}
+        %div.number 3
+    %section.game.orig
+        .game_hud
+            .game_hud__left
+                .game_globaltimer
+                    %img{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/node_count.png'}
+                    <span class="hits">0</span>/<span class="t_hits">0</span> <span class="t_nodes">NODES</span> 
+            .game_hud__middle
+                %img{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/reaction.png'}
+            .game_hud__right
+                %img.lev_icon{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+                .game_level Level: <span>1</span>
+        .game_inner__mute
+            <i class="a_sound fa fa-volume-up" aria-hidden="true"></i>
+            <i class="fa fa-volume-off" aria-hidden="true"></i>
+        .game_inner__mute--text Sound
+        .game_inner__song
+            <i class="fa fa-play" aria-hidden="true"></i>
+            <i class="a_song fa fa-pause" aria-hidden="true"></i>
+        .game_inner__song--text Music
+        .game_inner__time
+            %svg#layer_1{:space => "preserve", :style => "enable-background:new 0 0 138.5 58.5;", :version => "1.1", :viewbox => "0 0 138.5 58.5", :x => "0px", :xmlns => "http://www.w3.org/2000/svg", "xmlns:xlink" => "http://www.w3.org/1999/xlink", :y => "0px"}
+                :css
+                    .st0{fill:transparent;}
+                %g
+                    %path.st0{:d => "M108.8,55.5H29.2C14.8,55.5,3,43.7,3,29.3v0C3,14.8,14.8,3,29.2,3h79.5C123.2,3,135,14.8,135,29.2v0\r\n\t\tC135,43.7,123.2,55.5,108.8,55.5z"}
+            %svg#svg1{:space => "preserve", :style => "enable-background:new 0 0 138.5 58.5;", :version => "1.1", :viewbox => "0 0 138.5 58.5", :x => "0px", :xmlns => "http://www.w3.org/2000/svg", "xmlns:xlink" => "http://www.w3.org/1999/xlink", :y => "0px"}
+                :css
+                    .st0{fill:transparent;}
+                %g
+                    %path.st0{:d => "M108.8,55.5H29.2C14.8,55.5,3,43.7,3,29.3v0C3,14.8,14.8,3,29.2,3h79.5C123.2,3,135,14.8,135,29.2v0\r\n\t\tC135,43.7,123.2,55.5,108.8,55.5z"}
+            %p 180
+            %i.ion-chevron-up.faster
+            %i.ion-chevron-down.slower
+        .game_inner__multiplier
+            <span class="x">x</span><span class="m">1</span>
+            %span Multiplier
+        .bonus_wrap
+            .game_inner
+                .game_inner__center
+                    .warning
+                    .level_timer 
+                        <i class="fa fa-hourglass-o" aria-hidden="true"></i>
+                        <span class="s">20</span> <span class="text">SECONDS</span>
+                .nodes
+                    -(1..8).each do |node|
+                        .node_wrapper
+                            .game_inner__node--hitbox
+                            .game_inner__node{'node-id' => "node-#{node}"}
+                            .combo_text
+                                %img.c_1{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/combo1.png'}
+                                %img.c_2{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/combo2.png'}
+                                %img.c_3{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/combo3.png'}
+                                %img.c_4{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/combo4.png'}
+                               
+        .game_bar
+            %h2 
+                Reaction Bar - <span class="rp">0</span> / <span class="rpn">1000</span>
+            .game_bar__outer
+                .game_bar__icon--empty
+                    %img{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_empty.png'}
+                .game_bar__fill
+                    <canvas id="b" width="600px" height="300px"></canvas>
+                .game_bar__triangle
+                .game_bar__icon--full
+                    %img{:src => 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/217233/game_icon_full.png'}
+    .footer
+        .footer_left
+            Created on <a href="https://www.codepen.io" target='_blank'>Codepen</a> by <a href="https://codepen.io/jcoulterdesign/" target='_blank'>Jamie Coulter</a>. Mobile port by <a href="https://codepen.io/Stockin/" target='_blank'>Phil Stocking</a>
+        .footer_twitter
+            %a{:href => "#"}
+                <i class="fa fa-twitter-square" aria-hidden="true"></i>
+                %span Share on Twitter
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>

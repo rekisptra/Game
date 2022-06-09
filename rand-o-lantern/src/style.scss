@@ -1,0 +1,199 @@
+/* The version of Bourbon used in this Pen was 4.* */
+@import "bourbon";
+
+@mixin MQ($canvas) {
+  @media only screen and (min-width: $canvas) { @content; }
+}
+
+$color: (
+  body: #fefbeb,
+  primary: #4a2344,
+  knockout: #84ce96,
+);
+
+$amatic: 'Amatic SC', cursive;
+$fontdiner: 'Fontdiner Swanky', cursive;
+
+$font: (
+  primary: $amatic,
+  secondary: $fontdiner,
+);
+
+* {
+  box-sizing: border-box;
+}
+
+html, body { height: 100%; width: 100%; }
+
+body {
+  background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/203277/top-left.png") no-repeat,
+              url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/203277/top-right.png") no-repeat,
+              url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/203277/bottom-left.png") no-repeat,
+              url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/203277/bottom-right.png") no-repeat,
+              url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/203277/texture.png"), #5A4A42;
+  background-size: 50% auto;
+  background-position: left 5%, right 15%, left bottom, right bottom, 0 0;
+  position: relative;
+  font-family: map-get($font, primary);
+  color: map-get($color, body);
+  user-select: none;
+
+  @include MQ(800px) {
+    background-size: auto;
+  }
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: inherit;
+  overflow: hidden;
+  position: relative;
+  padding: 2rem 0;
+}
+
+.container {
+  position: relative;
+}
+
+img#backgroundimage {  /*Add the pumpkin background to container*/
+  display: block;
+  width: 100%;
+  opacity: 0;
+}
+
+.state {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  z-index: 2; /*make sure states are over the bg image*/
+  pointer-events: none; /*This prevents any clicks from registering*/
+
+  &.state-0 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    header {
+      margin-bottom: 4rem;
+      text-align: center;
+
+      @include MQ(800px) {
+        margin-bottom: 8rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: map-get($font, secondary);
+        font-size: 2rem;
+
+        @include MQ(800px) {
+          font-size: 6rem;
+        }
+      }
+
+      h2 {
+        margin: 1rem 0 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-align: center;
+        color: map-get($color, knockout);
+
+        @include MQ(800px) {
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+
+  &.show {
+    pointer-events: initial;
+  }
+}
+
+aside {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 2.5rem;
+  height: 100px;
+  text-align: center;
+
+  @include MQ(800px) {
+    margin-top: 5rem;
+  }
+
+  #hint, #controls {
+    display: none;
+    opacity: 0;
+  }
+
+  .button {
+    &:last-child {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.button, #hint p {
+  display: inline-block;
+  margin: 0;
+  padding: 0.5rem 3rem;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  @include MQ(800px) {
+    padding: 1rem 3rem;
+    font-size: 3rem;
+  }
+}
+
+.button{
+  background-color: map-get($color, primary);
+  cursor: pointer;
+  @include transition(0.5s);
+
+  &:hover {
+    background-color: lighten(map-get($color, primary), 5%);
+  }
+}
+
+.reel {
+  position: absolute;
+  height: 50%;
+
+  &#topreel {
+    top: 0px;
+    left: -25%;
+  }
+
+  &#bottomreel {
+    right: -25%;
+    bottom: 0px;
+
+    img {
+      float: right;
+    }
+  }
+
+  img {
+    float: left;
+    display: block;
+    height: 100%;
+    width: auto;
+  }
+}
+
+#appcanvas {
+  position: absolute;
+  left: 25%;
+  width: 50%;
+}

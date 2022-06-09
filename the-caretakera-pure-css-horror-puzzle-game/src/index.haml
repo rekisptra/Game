@@ -1,0 +1,1077 @@
+%img.thumbnail{:src => 'https://assets.codepen.io/217233/bgThumb.PNG'}
+
+-# ==============================================================================================================================
+-# Game setup.
+-# ==============================================================================================================================
+
+- @introText = ["Your head is spinning and your temples throb.", "You awaken in a dimly lit storage cupboard, with no memory of where or who you are.", "A siren echoes through the hallways and the air is thick with the smell of blood..." ]
+- rows            = 4
+- segments        = 16
+- startingRow     = 4
+- startingSegment = 11
+
+-# ==============================================================================================================================
+-# "Post processing"
+-# ==============================================================================================================================
+
+.postProcess
+.grain
+.grain
+.grain
+
+-# ==============================================================================================================================
+-# Game loading screen.
+-# This is a fake loader, no js. 
+-# It's essentially just to try and let the assets load in in the background.
+-# ==============================================================================================================================
+                    
+
+.loader
+    .loader_inner
+        %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/caretakerLogo.png'}
+        .loader_inner__cogs
+            %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/Gear-1s-201px.gif'}
+            %h2 Loading checkboxs...
+
+-# ==============================================================================================================================
+-# Game introductory text.
+-# ==============================================================================================================================
+
+
+.intro
+    .intro_inner
+        - @introText.each_with_index do | text, index |
+            - if(index == 0)
+                %input.introInput{:id => "introText-#{index + 1}", :type => 'radio', :checked => 'checked', :name => 'intro'}
+            - else 
+                %input.introInput{:id => "introText-#{index + 1}", :type => 'radio', :name => 'intro'}
+            .text
+                %p 
+                    #{text}
+                    %label{:for => "introText-#{index + 2}"}
+        %input.introInput{:id => "introText-#{@introText.length() + 1}", :type => 'radio', :name => 'intro'}
+        .overlay
+                    
+-# ==============================================================================================================================
+-# Game wrapper.
+-# ============================================================================================================================== 
+
+.game
+    
+    %input#overlayObject-1{:type => 'checkbox', 'data-debug' => "Storage note"}
+    %input#overlayObject-2{:type => 'checkbox', 'data-debug' => "Maintenance note"}
+    %input#overlayObject-3{:type => 'checkbox', 'data-debug' => "Wardens note"}
+    %input#overlayObject-4{:type => 'checkbox', 'data-debug' => "Photo"}
+    %input#overlayObject-5{:type => 'checkbox', 'data-debug' => "Canteen Notice"}
+    %input#overlayObject-6{:type => 'checkbox', 'data-debug' => "Access photo"}
+    %input#overlayObject-7{:type => 'checkbox', 'data-debug' => "Radio"}
+    %input#overlayObject-8{:type => 'checkbox', 'data-debug' => "Reception Note"}
+    %input#overlayObject-9{:type => 'checkbox', 'data-debug' => "Infirmary note"}
+    %input#overlayObject-10{:type => 'checkbox', 'data-debug' => "Scans"}
+    %input#overlayObject-11{:type => 'checkbox', 'data-debug' => "Fusebox"}
+
+    %input#overlayObject-12{:type => 'checkbox', 'data-debug' => "PC"}
+    %input#overlayObject-13{:type => 'checkbox', 'data-debug' => "Security note"}
+
+    %input#overlayObject-14{:type => 'checkbox', 'data-debug' => "Newspaper"}
+
+
+    -#  Key objects. These objects can be interacted with, but will only return a set response. Such as 'Nothing here'. Each object in our game must have an associated input with unique ID, and a corresponding label inside the segment it belongs to.
+    %input#keyObject-1{:type => 'checkbox', 'data-debug' => "Warden office door"}
+    %input#keyObject-2{:type => 'checkbox', 'data-debug' => "Warden office key"}
+
+    %input#keyObject-3{:type => 'checkbox', 'data-debug' => "East wing door"}
+    %input#keyObject-4{:type => 'checkbox', 'data-debug' => "Wardens key"}
+    
+    %input#keyObject-5{:type => 'checkbox', 'data-debug' => "Reception door"}
+    %input#keyObject-6{:type => 'checkbox', 'data-debug' => "Coin"}
+    
+    %input#keyObject-7{:type => 'checkbox', 'data-debug' => "Visitation door"}
+    %input#keyObject-8{:type => 'checkbox', 'data-debug' => "Visitation Key"}
+
+    %input#keyObject-9{:type => 'checkbox', 'data-debug' => "Door to cells"}
+    %input#keyObject-10{:type => 'checkbox', 'data-debug' => "Door control"}
+    %input#keyObject-11{:type => 'checkbox', 'data-debug' => "Battery"}
+
+    %input#keyObject-12{:type => 'checkbox', 'data-debug' => "Door to security"}
+    %input#keyObject-13{:type => 'checkbox', 'data-debug' => "Hand"}
+    %input#keyObject-14{:type => 'checkbox', 'data-debug' => "Hacksaw"}
+
+    %input#keyObject-15{:type => 'checkbox', 'data-debug' => "Cells door"}
+
+    %input#keyObject-16{:type => 'checkbox', 'data-debug' => "Cells door"}
+    %input#keyObject-17{:type => 'checkbox', 'data-debug' => "Cells door"}
+    %input#keyObject-18{:type => 'checkbox', 'data-debug' => "Cells door"}
+    %input#keyObject-19{:type => 'checkbox', 'data-debug' => "Cells door"}
+    %input#keyObject-20{:type => 'checkbox', 'data-debug' => "Cells door"}
+    %input#keyObject-21{:type => 'checkbox', 'data-debug' => "Cells door"}
+
+    %input#keyObject-22{:type => 'checkbox', 'data-debug' => "D Block door"}
+    %input#keyObject-23{:type => 'checkbox', 'data-debug' => "PC Unlocked"}
+
+    -# None key objects. These objects can be interacted with, but will only return a set response. Such as 'Nothing here'. Each object in our game must have an associated input with unique ID, and a corresponding label inside the segment it belongs to.
+    
+    %input#noneKeyObject-1{:type => 'checkbox', 'data-debug' => "Storage emergency light"}
+    %input#noneKeyObject-2{:type => 'checkbox', 'data-debug' => "Storage toolbox"}
+    %input#noneKeyObject-3{:type => 'checkbox', 'data-debug' => "Storage ladder"}
+    %input#noneKeyObject-4{:type => 'checkbox', 'data-debug' => "Blood"}
+    %input#noneKeyObject-5{:type => 'checkbox', 'data-debug' => "Fire exit"}
+    %input#noneKeyObject-6{:type => 'checkbox', 'data-debug' => "Clock"}
+    %input#noneKeyObject-7{:type => 'checkbox', 'data-debug' => "Whiteboard"}
+    %input#noneKeyObject-8{:type => 'checkbox', 'data-debug' => "Mop and bucket"}
+    %input#noneKeyObject-9{:type => 'checkbox', 'data-debug' => "Cooler"}
+    %input#noneKeyObject-10{:type => 'checkbox', 'data-debug' => "Filing cabinet"}
+    %input#noneKeyObject-11{:type => 'checkbox', 'data-debug' => "Books"}
+    %input#noneKeyObject-12{:type => 'checkbox', 'data-debug' => "Monster"}
+    %input#noneKeyObject-13{:type => 'checkbox', 'data-debug' => "Mr Clay"}
+    
+    %input#noneKeyObject-14{:type => 'checkbox', 'data-debug' => "Codepen poster"}
+    %input#noneKeyObject-15{:type => 'checkbox', 'data-debug' => "Adam poster"}
+    %input#noneKeyObject-16{:type => 'checkbox', 'data-debug' => "Tool rack"}
+    
+    %input#noneKeyObject-17{:type => 'checkbox', 'data-debug' => "Vending machine"}
+    %input#noneKeyObject-18{:type => 'checkbox', 'data-debug' => "Broken lamp"}
+    %input#noneKeyObject-19{:type => 'checkbox', 'data-debug' => "Sofa"}
+
+    %input#noneKeyObject-20{:type => 'checkbox', 'data-debug' => "Calendar"}
+    %input#noneKeyObject-21{:type => 'checkbox', 'data-debug' => "Box"}
+
+    %input#noneKeyObject-22{:type => 'checkbox', 'data-debug' => "Cup"}
+    %input#noneKeyObject-23{:type => 'checkbox', 'data-debug' => "Magazines"}
+    %input#noneKeyObject-24{:type => 'checkbox', 'data-debug' => "Liars"}
+
+    %input#noneKeyObject-25{:type => 'checkbox', 'data-debug' => "Kitchen front door"}
+
+    %input#noneKeyObject-26{:type => 'checkbox', 'data-debug' => "Bin"}
+    %input#noneKeyObject-27{:type => 'checkbox', 'data-debug' => "Bench"}
+    %input#noneKeyObject-28{:type => 'checkbox', 'data-debug' => "Feed me"}
+    %input#noneKeyObject-29{:type => 'checkbox', 'data-debug' => "Food"}
+    %input#noneKeyObject-30{:type => 'checkbox', 'data-debug' => "Barrier"}
+    %input#noneKeyObject-31{:type => 'checkbox', 'data-debug' => "Barrier door"}
+    %input#noneKeyObject-32{:type => 'checkbox', 'data-debug' => "Staff vending"}
+    %input#noneKeyObject-33{:type => 'checkbox', 'data-debug' => "Directors image"}
+
+    %input#noneKeyObject-34{:type => 'checkbox', 'data-debug' => "Checkpoint body"}
+    %input#noneKeyObject-35{:type => 'checkbox', 'data-debug' => "Death"}
+    %input#noneKeyObject-36{:type => 'checkbox', 'data-debug' => "Computer"}
+    %input#noneKeyObject-37{:type => 'checkbox', 'data-debug' => "Checkpoint filing cabinet"}
+
+    %input#noneKeyObject-38{:type => 'checkbox', 'data-debug' => "Kitchen front door"}
+
+    %input#noneKeyObject-39{:type => 'checkbox', 'data-debug' => "Mop"}
+    %input#noneKeyObject-40{:type => 'checkbox', 'data-debug' => "Drip"}
+    %input#noneKeyObject-41{:type => 'checkbox', 'data-debug' => "Collage"}
+    %input#noneKeyObject-42{:type => 'checkbox', 'data-debug' => "Crashcart"}
+    %input#noneKeyObject-43{:type => 'checkbox', 'data-debug' => "Revenge"}
+    %input#noneKeyObject-44{:type => 'checkbox', 'data-debug' => "Sam"}
+
+    %input#noneKeyObject-45{:type => 'checkbox', 'data-debug' => "Cell door"}
+    %input#noneKeyObject-46{:type => 'checkbox', 'data-debug' => "Cell name"}
+    %input#noneKeyObject-47{:type => 'checkbox', 'data-debug' => "Cell name"}
+    %input#noneKeyObject-48{:type => 'checkbox', 'data-debug' => "Cell door"}
+    %input#noneKeyObject-49{:type => 'checkbox', 'data-debug' => "Cell name"}
+    %input#noneKeyObject-50{:type => 'checkbox', 'data-debug' => "Freedom"}
+
+    %input#noneKeyObject-51{:type => 'checkbox', 'data-debug' => "Staris"}
+    %input#noneKeyObject-52{:type => 'checkbox', 'data-debug' => "Landscape"}
+    %input#noneKeyObject-53{:type => 'checkbox', 'data-debug' => "Coffee table"}
+    %input#noneKeyObject-54{:type => 'checkbox', 'data-debug' => "Magazines"}
+    %input#noneKeyObject-55{:type => 'checkbox', 'data-debug' => "Blood"}
+    %input#noneKeyObject-56{:type => 'checkbox', 'data-debug' => "Filing cabinet"}
+
+    %input#noneKeyObject-57{:type => 'checkbox', 'data-debug' => "Filing cabinet"}
+    %input#noneKeyObject-58{:type => 'checkbox', 'data-debug' => "Coyier"}
+
+    %input#noneKeyObject-59{:type => 'checkbox', 'data-debug' => "Lockers"}
+    %input#noneKeyObject-60{:type => 'checkbox', 'data-debug' => "Shaw"}
+    %input#noneKeyObject-61{:type => 'checkbox', 'data-debug' => "Evans"}
+
+    %input#noneKeyObject-62{:type => 'checkbox', 'data-debug' => "Body"}
+    %input#noneKeyObject-63{:type => 'checkbox', 'data-debug' => "Exit"}
+
+    -# Movement checkboxes. As we can only traverse downards in the DOM, these must be above the actual viewport.
+    -(1..rows).each do | row | 
+        -(1..segments).each do | segment |
+            -# The starting point of the character needs to be initially checked, so we do this based on the game setup if the starting row and segment match.
+            - if(row == startingRow && segment == startingSegment)
+                %input{:type => 'radio', :id => "segment-#{segment + ((row - 1) * segments)}-forwards", :name => 'trigger'}
+                %input{:type => 'radio', :id => "segment-#{segment + ((row - 1) * segments)}-back", :name => 'trigger', :checked => 'checked'}
+            - else
+                %input{:type => 'radio', :id => "segment-#{segment + ((row - 1) * segments)}-forwards", :name => 'trigger'}
+                %input{:type => 'radio', :id => "segment-#{segment + ((row - 1) * segments)}-back", :name => 'trigger'}
+
+    -# Game segments.
+    .game_viewport
+        -# Game tilemap.
+        %img.tilemap{:draggable => 'false', :src => 'https://assets.codepen.io/217233/caretakerMap4.png'}
+        
+        -# Game segments | Create a div including controls for each segment in our game.
+        -(1..rows).each do | row |
+            -(1..segments).each do | segment |
+                .game_viewport__segment
+                    -# Individual segments and object placement
+                    
+                    -# ===============================================================
+                    -# Storage room
+                    -# ===============================================================
+
+                    -if (row == 4 && segment == 11)
+                        -# Emergency light
+                        %label.object.look{:for => 'noneKeyObject-1'}
+                            %img.wallLight{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_light.png'}
+                        .response.response-1
+                            The lights down here don't seem to be working. Good job I have this field torch.
+                            %label.closeResponse{:for => 'noneKeyObject-1'}
+
+                        -# Toolbox
+                        %label.object.look{:for => 'noneKeyObject-2'}
+                            %img.toolbox{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_toolbox.png'}
+                        .response.response-2
+                            There's a heavy metal toolbox here. Nothing in it I need right now.
+                            %label.closeResponse{:for => 'noneKeyObject-2'}
+                        
+                        -# Ladder
+                        %label.object.look{:for => 'noneKeyObject-3'}
+                            %img.ladder{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_ladder.png'}
+                        .response.response-3
+                            A workmans ladder. I see no use for this right now.
+                            %label.closeResponse{:for => 'noneKeyObject-3'}
+                                
+                    -# ===============================================================
+                    -# Storage room entrance
+                    -# ===============================================================
+                    
+                    -if (row == 4 && segment == 10)
+                        -# Blood
+                        %label.object.look{:for => 'noneKeyObject-4'}
+                            %img.blood{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_blood.png'}
+                        .response.response-4
+                            Whos blood is this? Is this mine?
+                            %label.closeResponse{:for => 'noneKeyObject-4'}
+                            
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-1'}
+                            %img.caretakerNote{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_caretakerNoteObject.png'}
+                            
+                        -# Fire exit
+                        %label.object.open{:for => 'noneKeyObject-5'}
+                            %img.fireEscape{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fireEscape.png'}
+                        .response.response-5
+                            Locked tight. Looks like some kind of security lockdown has been initiated.
+                            %label.closeResponse{:for => 'noneKeyObject-5'}
+                                
+                    -# ===============================================================
+                    -# Maintenance level 1 with whiteboard
+                    -# ===============================================================
+
+                    -if (row == 4 && segment == 9)
+                        -# Clock
+                        %label.object.look{:for => 'noneKeyObject-6'}
+                            %img.clock{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_clock.png'}
+                        .response.response-6
+                            The clock stopped working at 10.10pm.
+                            %label.closeResponse{:for => 'noneKeyObject-6'}
+                                
+                        -# Whiteboard
+                        %label.object.look{:for => 'noneKeyObject-7'}
+                            %img.whiteboard{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_whiteboard.png'}
+                        .response.response-7
+                            Theres some notes here from a maintenance team, it's a list of things that need fixing.
+                            %label.closeResponse{:for => 'noneKeyObject-7'}
+                                
+                        -# Mop and bucket
+                        %label.object.look{:for => 'noneKeyObject-8'}
+                            %img.mop{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_mop.png'}
+                        .response.response-8
+                            Has someone tried to mop up blood with this?
+                            %label.closeResponse{:for => 'noneKeyObject-8'}
+                            
+                    -# ===============================================================
+                    -# Maintenance level stairs
+                    -# ===============================================================
+
+                    -if (row == 4 && segment == 8)
+                        -# Cooler
+                        %label.object.search{:for => 'noneKeyObject-9'}
+                            %img.cooler{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_cooler.png'}
+                        .response.response-9
+                            There's nothing in here I need right now. Maybe some painkillers wouldn't go amiss.
+                            %label.closeResponse{:for => 'noneKeyObject-9'}
+                            
+                    -# ===============================================================
+                    -# East wing cork board
+                    -# ===============================================================
+                    
+                    -if (row == 3 && segment == 8)
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-3'}
+                            %img.wardensNotice{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_wardensNotice.png'}
+
+                    -# ===============================================================
+                    -# Outside wardens office
+                    -# ===============================================================
+                    
+                    -if (row == 3 && segment == 9)
+                        -# Wardens office door
+                        %label.object.keyObject.open{:for => 'keyObject-1'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            There's a sign on the door that says Dr Mason. It's locked though. I'll need a key to get in.
+                            %label.closeResponse{:for => 'keyObject-1'}
+                        .response.success
+                            Alright, that unlocked the door. Let's see if this Dr Mason is home.
+                    
+                    -# ===============================================================
+                    -# Wardens office entrance
+                    -# ===============================================================
+                    
+                    -if (row == 3 && segment == 10)
+                        %label.object.search{:for => 'noneKeyObject-10'}
+                            %img.filingCabinet{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_filingCabinet.png'}
+                        .response.response-10
+                            The drawers are littered with patient reports and test results. Is this some kind of hospital?
+                            %label.closeResponse{:for => 'noneKeyObject-10'}
+                            
+                        %label.object.look{:for => 'noneKeyObject-11'}
+                            %img.books{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_books.png'}
+                        .response.response-11
+                            Assorted books on psychological practices. Looks like they have been read a few times.
+                            %label.closeResponse{:for => 'noneKeyObject-11'}
+                            
+                    -# ===============================================================
+                    -# Wardens office
+                    -# ===============================================================
+                    
+                    -if (row == 3 && segment == 11)
+                        -# Monster graffiti
+                        %label.object.look{:for => 'noneKeyObject-12'}
+                            %img.monster{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_monster.png'}
+                        .response.response-12
+                            Monster? What does this mean?
+                            %label.closeResponse{:for => 'noneKeyObject-12'}
+                            
+                        -# Mr Clay's body
+                        %label.object.look{:for => 'noneKeyObject-13'}
+                            %img.mrClay{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_mrClay.png'}
+                        .response.response-13
+                            Jesus. What happened to this guy! This is not good I have to get out of here.
+                            %label.closeResponse{:for => 'noneKeyObject-13'}
+                            
+                        -# Wardens key card
+                        %label.object.destroy.take{:for => 'keyObject-4'}
+                            %img.eastWingKeyCard{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_eastWingKeycard.png'}
+                            .glint
+                        .response
+                            I'm sorry Dr, but I'm going to need to borrow this keycard.
+                            
+                    -# ===============================================================
+                    -# Maintenance office
+                    -# ===============================================================
+                    
+                    -if (row == 4 && segment == 6)
+                        -# Codepen poster
+                        %label.object.look{:for => 'noneKeyObject-14'}
+                            %img.codepenPoster{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_codepen.png'}
+                        .response.response-14
+                            There's a poster here with an odd symbol on it, I wonder what it means?
+                            %label.closeResponse{:for => 'noneKeyObject-14'}
+
+                        -# adam poster
+                        %label.object.look{:for => 'noneKeyObject-15'}
+                            %img.adamPoster{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_adam.png'}
+                        .response.response-15
+                            A portrait of a man. Perhaps one of the maintenance guys is a fan of his.
+                            %label.closeResponse{:for => 'noneKeyObject-15'}
+
+                        -# Wardens office key
+                        %label.object.destroy.take{:for => 'keyObject-2'}
+                            %img.wardensOfficeKey{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_wardensOfficeKey.png'}
+                        .response
+                            There's a key here. There's a key chain on it. It says "Mr Mason's office spare". 
+
+                    -# ===============================================================
+                    -# Maintenance office Back
+                    -# ===============================================================
+                    -if (row == 4 && segment == 5)
+                        -# Tool rack
+                        %label.object.look{:for => 'noneKeyObject-16'}
+                            %img.toolRack{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_toolRack.png'}
+                        .response.response-16
+                            A plethora of tools. Wrenches, spanners and hammers. Nothing I need right now.
+                            %label.closeResponse{:for => 'noneKeyObject-16'}
+
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-2'}
+                            %img.maintenanceNote{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_maintenanceNote.png'}
+
+                    -# ===============================================================
+                    -# East wing vending
+                    -# ===============================================================
+                    -if (row == 3 && segment == 6)
+
+                        -# Vending machine
+                        %label.object.look{:for => 'noneKeyObject-17'}
+                            %img.vendingMachine{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_vendingMachine.png'}
+                        .response.response-17
+                            A vending machine, shame it's not working, I could certainly eat right now.
+                            %label.closeResponse{:for => 'noneKeyObject-17'}
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-18'}
+                            
+                        .response.response-18
+                            
+                            %label.closeResponse{:for => 'noneKeyObject-18'}
+
+                        %label.object.destroy.take{:for => 'keyObject-6'}
+                            %img.vendingSlot{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_coinSlot.png'}
+                        .response
+                            There's a staff badge here in the change slot. This will come in useful.
+
+                    -# ===============================================================
+                    -# East wing door
+                    -# ===============================================================
+
+                    -if (row == 3 && segment == 5)
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-19'}
+                            %img.sofa{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_sofa.png'}
+                        .response.response-19
+                            No time to rest. I need to find a way out of here.
+                            %label.closeResponse{:for => 'noneKeyObject-19'}
+
+                        -# East wing door
+                        %label.object.keyObject.open{:for => 'keyObject-3'}
+                            %img.doorTwo{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            I need a keycard to get through this door. I wonder if there is one around somewhere.
+                            %label.closeResponse{:for => 'keyObject-3'}
+                        .response.success
+                            OK, that's unlocked. I need to find a way out of here so I can get some help.
+
+                    -# ===============================================================
+                    -# East wing vending
+                    -# ===============================================================
+
+                    -if (row == 3 && segment == 3)
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-20'}
+                            %img.calendar{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_calendar.png'}
+                        .response.response-20
+                            A colorful wall calendar. Todays date has been circled in red pen.
+                            %label.closeResponse{:for => 'noneKeyObject-20'}
+
+                        -# Broken lamp
+                        %label.object.search{:for => 'noneKeyObject-21'}
+                            %img.box{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_box.png'}
+                        .response.response-21
+                            An empty box. It was probably used to restock this vending machine.
+                            %label.closeResponse{:for => 'noneKeyObject-21'}
+
+                    -# ===============================================================
+                    -# East wing Liars
+                    -# ===============================================================
+
+                    -if (row == 3 && segment == 2)
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-22'}
+                            %img.mug{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_mug.png'}
+                        .response.response-22
+                            A mug of black coffee. Strange, the mug is still warm to the touch.
+                            %label.closeResponse{:for => 'noneKeyObject-22'}
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-23'}
+                            %img.magazine{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_magazines.png'}
+                        .response.response-23
+                            A stack of various healthcare magazines.
+                            %label.closeResponse{:for => 'noneKeyObject-23'}
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-24'}
+                            %img.liars{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_liars.png'}
+                        .response.response-24
+                            The Mason Institute...so that's where I am. The name seems familiar.
+                            %label.closeResponse{:for => 'noneKeyObject-24'}
+                        
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-4'}
+                            %img.photo{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_photo.png'}
+
+                    -# ===============================================================
+                    -# Kitchen front door
+                    -# ===============================================================
+
+                    -if (row == 2 && segment == 4)
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-25'}
+                            %img.doorTwo{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.response-25
+                            It's locked from the other side. There's no way in this way.
+                            %label.closeResponse{:for => 'noneKeyObject-25'}
+
+                    -# ===============================================================
+                    -# Canteen entrance
+                    -# ===============================================================
+
+                    -if (row == 2 && segment == 5)
+                        -# Broken lamp
+                        %label.object.search{:for => 'noneKeyObject-26'}
+                            %img.bin{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_bin.png'}
+                        .response.response-26
+                            Full of food wrappers and empty soda cans. Nothing I can use here.
+                            %label.closeResponse{:for => 'noneKeyObject-26'}
+
+                    -# ===============================================================
+                    -# Canteen entrance 2
+                    -# ===============================================================
+
+                    -if (row == 2 && segment == 6)
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-27'}
+                            %img.bench{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_bench.png'}
+                        .response.response-27
+                            A small wooden bench I'm guessing for the staff. The food is half eaten and still on the plate.
+                            %label.closeResponse{:for => 'noneKeyObject-27'}
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-28'}
+                            %img.feedMe{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_feedMe.png'}
+                        .response.response-28
+                            Who could have written this?
+                            %label.closeResponse{:for => 'noneKeyObject-28'}
+
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-29'}
+                            %img.food{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_food.png'}
+                        .response.response-29
+                            I don't want to guess at what this is...
+                            %label.closeResponse{:for => 'noneKeyObject-29'}
+                        
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-5'}
+                            %img.canteenNotice{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_canteenNote.png'}
+
+
+                    -# ===============================================================
+                    -# Canteen entrance barrier
+                    -# ===============================================================
+
+                    -if (row == 2 && segment == 7)
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-30'}
+                            %img.barrier{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_barrier.png'}
+                        .response.response-30
+                            Someone has made a make-shift barrier here using benches and a vending machine. What were they trying to keep out?
+                            %label.closeResponse{:for => 'noneKeyObject-30'}
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-31'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.response-31
+                            There's just no way I can move all of this stuff on my own. I'll have to find another way around.
+                            %label.closeResponse{:for => 'noneKeyObject-31'}
+
+                    -# ===============================================================
+                    -# Access 2
+                    -# ===============================================================
+                    -if (row == 2 && segment == 1)
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-6'}
+                            %img.accessPhoto{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_accessPhoto.png'}
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-38'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.response-38
+                            The handles broken off. There must be something important behind this door...
+                            %label.closeResponse{:for => 'noneKeyObject-38'}
+                    -# ===============================================================
+                    -# Staff room
+                    -# ===============================================================
+                    -if (row == 1 && segment == 6)
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-7'}
+                            %img.radio{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_radio_1.png'}
+                        -# Broken lamp
+                        %label.object.look{:for => 'noneKeyObject-32'}
+                            %img.staffVending{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_vendingMachine.png'}
+                        .response.response-32
+                            Another vending machine full of snacks I can't get to. If I get desperate enough, I'll smash the glass.
+                            %label.closeResponse{:for => 'noneKeyObject-32'}
+                    -# ===============================================================
+                    -# Staff room 2
+                    -# ===============================================================
+                    -if (row == 1 && segment == 7)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-33'}
+                            %img.directors{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_directors.png'}
+                        .response.response-33
+                            Portraits of the board. Dr. H Desroches, Dr M Mosley and Dr D Khourshid.
+                            %label.closeResponse{:for => 'noneKeyObject-33'}  
+
+                    -# ===============================================================
+                    -# Access 2
+                    -# ===============================================================
+                    -if (row == 1 && segment == 5)
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-8'}
+                            %img.receptionNote{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_maintenanceNote.png'}
+                        %label.object.keyObject.open{:for => 'keyObject-7'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            I need the staff room key to get in here. In must be around somewhere.
+                            %label.closeResponse{:for => 'keyObject-7'}
+                        .response.success
+                            I've opened the door using the staff key.
+
+                    -# ===============================================================
+                    -# Staff room
+                    -# ===============================================================
+                    -if (row == 1 && segment == 1)
+                        %label.object.keyObject.open{:for => 'keyObject-5'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            I need a staff badge to get through here. Maybe there's one around somewhere.
+                            %label.closeResponse{:for => 'keyObject-5'}
+                        .response.success
+                            I used the badge I found to open the door.
+
+                    -# ===============================================================
+                    -# Holding cell
+                    -# ===============================================================
+                    -if (row == 2 && segment == 8)
+                        %label.object.look{:for => 'noneKeyObject-34'}
+                            %img.checkpointBody{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_body.png'}
+                        .response.response-34
+                            Poor guy has been eviscerated. So much blood. His name tag says 'J Dickinson'.
+                            %label.closeResponse{:for => 'noneKeyObject-34'}
+                        -# Wardens office door
+                        %label.object.keyObject.take{:for => 'keyObject-10'}
+                            %img.panel{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_panel.png'}
+                        .response.fail
+                            There's a control panel here that opens the checkpoint doors. Looks like it's been sabotaged. A new battery would fix it.
+                            %label.closeResponse{:for => 'keyObject-10'}
+                        .response.success
+                            Perfect, the control panel is powered and the door should now be unlocked.
+                        -# Broken lamp
+
+                    -# ===============================================================
+                    -# Holding cell
+                    -# ===============================================================
+                    -if (row == 2 && segment == 9)
+                        %label.object.look{:for => 'noneKeyObject-35'}
+                            %img.death{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_death.png'}
+                        .response.response-35
+                            This doesn't bode well. I need to stay alert, there could be someone still in here with me.
+                            %label.closeResponse{:for => 'noneKeyObject-35'}
+                        %label.object.look{:for => 'noneKeyObject-36'}
+                            %img.computer{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_monitor.png'}
+                        .response.response-36
+                            This was probably used to check patients in and out. It's not working right now.
+                            %label.closeResponse{:for => 'noneKeyObject-36'}
+                        %label.object.look{:for => 'noneKeyObject-37'}
+                            %img.checkpointCabinet{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_filingCabinet.png'}
+                        .response.response-37
+                            A filing cabinet full of patient mugshots and bios.
+                            %label.closeResponse{:for => 'noneKeyObject-37'}
+                        -# Wardens office door
+                        %label.object.keyObject.open{:for => 'keyObject-9'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            The door is locked tight. I need to activate a control panel somewhere.
+                            %label.closeResponse{:for => 'keyObject-9'}
+                        .response.success
+                            The door is now open. I can go through.
+                    
+                    -# ===============================================================
+                    -# Security Door
+                    -# ===============================================================
+                    -if (row == 2 && segment == 14)
+                        %label.object.keyObject.open{:for => 'keyObject-12'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            There's a palm print scanner on this door.
+                            %label.closeResponse{:for => 'keyObject-12'}
+                        .response.success
+                            The door is now open. I can go through.
+
+                    -# ===============================================================
+                    -# Infirmary 1
+                    -# ===============================================================
+                    -if (row == 3 && segment == 14)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-39'}
+                            %img.mopTwo{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_mopTwo.png'}
+                        .response.response-39
+                            There's a bucket here full of flesh and blood.
+                            %label.closeResponse{:for => 'noneKeyObject-39'}  
+                        -# Wardens key card
+                        %label.object.destroy.search{:for => 'keyObject-14'}
+                            %img.hacksaw{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_medicalCabinet.png'}
+                        .response
+                            There's a surgical saw in here, I don't like what I may have to do with it.
+
+                    -# ===============================================================
+                    -# Infirmary 2
+                    -# ===============================================================
+                    -if (row == 3 && segment == 15)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-40'}
+                            %img.drip{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_drip.png'}
+                        .response.response-40
+                            A drip filled with a clear fluid. This looks like it's been used recently.
+                            %label.closeResponse{:for => 'noneKeyObject-40'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-41'}
+                            %img.collage{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_collage.png'}
+                        .response.response-41
+                            A collage of various medical photographs.
+                            %label.closeResponse{:for => 'noneKeyObject-41'}  
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-9'}
+                            %img.infirmaryNote{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_infirmaryNote.png'}
+
+
+                    -# ===============================================================
+                    -# Infirmary 3
+                    -# ===============================================================
+                    -if (row == 3 && segment == 16)
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-10'}
+                            %img.scans{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_scans.png'}
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-42'}
+                            %img.crash{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_crashCart.png'}
+                        .response.response-42
+                            A medical crash cart. This isn't powered so I can't use it.
+                            %label.closeResponse{:for => 'noneKeyObject-42'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-43'}
+                            %img.revenge{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_revenge_1.png'}
+                        .response.response-43
+                            Revenge. Poor guy.
+                            %label.closeResponse{:for => 'noneKeyObject-43'}  
+                        -# Note
+                        %label.object.look.persist{:for => 'noneKeyObject-44'}
+                            %img.sam{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_sam.png'}
+                        .response.response-44
+                            It's the bloodied remains of a security guard. His name tag says 'Sam Watts'
+                            %label.closeResponse{:for => 'noneKeyObject-44'}  
+                        %label.object.keyObject.take{:for => 'keyObject-13'}
+                            %img.hand{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_hand.png'}
+                        .response.fail
+                            I don't like where this is going, but I would need something to do it with.
+                            %label.closeResponse{:for => 'keyObject-13'}
+                        .response.success
+                            Oh God, Ok I've done it. I'm so sorry Sam.
+                    -# ===============================================================
+                    -# Cells fuse
+                    -# ===============================================================
+                    -if (row == 2 && segment == 12)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-48'}
+                            %img.cellDoor{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_cellDoorOpen.png'}
+                        .response.response-48
+                            This cell door has been opened and there's a foul smell coming from inside.
+                            %label.closeResponse{:for => 'noneKeyObject-48'} 
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-49'}
+                            %img.cellName{:draggable => 'false', :draggable => 'false', :draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_cellName.png'}
+                        .response.response-49
+                            Patient #18. The rest of the name plaque has been scratched off.
+                            %label.closeResponse{:for => 'noneKeyObject-49'} 
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-50'}
+                            %img.freedom{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_freedom.png'}
+                        .response.response-50
+                            Freedom. At least we have some things in common.
+                            %label.closeResponse{:for => 'noneKeyObject-50'} 
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-11'}
+                            %img.fuseBox{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseBox.png'}
+                    
+                    -# ===============================================================
+                    -# Cells door
+                    -# ===============================================================
+                    -if (row == 2 && segment == 13)
+                        -# Wardens office door
+                        %label.object.keyObject.open{:for => 'keyObject-15'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            The door is locked. I need to divert the cells backup power to it. There must be a fusebox around here somewhere.
+                            %label.closeResponse{:for => 'keyObject-15'}
+                        .response.success
+                            The door is now powered, I can go through.
+                        
+                    -# ===============================================================
+                    -# Cells entrance
+                    -# ===============================================================
+                    -if (row == 2 && segment == 10)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-45'}
+                            %img.cellDoor{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_cellDoor.png'}
+                        .response.response-45
+                            These look like patient cells of some kind, It's locked and I can't hear anyone inside.
+                            %label.closeResponse{:for => 'noneKeyObject-45'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-46'}
+                            %img.cellName{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_cellName.png'}
+                        .response.response-46
+                            Patient #4. K. Van Sant.
+                            %label.closeResponse{:for => 'noneKeyObject-46'} 
+                    -# ===============================================================
+                    -# Cells entrance
+                    -# ===============================================================
+                    -if (row == 2 && segment == 11)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-47'}
+                            %img.cellName{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_cellName.png'}
+                        .response.response-47
+                            Patient #12. G. Park.
+                            %label.closeResponse{:for => 'noneKeyObject-47'} 
+                    
+                    -# ===============================================================
+                    -# Reception 2
+                    -# ===============================================================
+                    -if (row == 1 && segment == 3)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-51'}
+                            %img.stairs{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_stairs.png'}
+                        .response.response-51
+                            Looks like this leads to more offices but the stairwell is blocked.
+                            %label.closeResponse{:for => 'noneKeyObject-51'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-52'}
+                            %img.landscape{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_landscape.png'}
+                        .response.response-52
+                            Even this serene landscape painting looks ominous.
+                            %label.closeResponse{:for => 'noneKeyObject-52'}  
+                    -if (row == 1 && segment == 4)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-53'}
+                            %img.coffeeTable{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_coffeeTable.png'}
+                        .response.response-53
+                            A small coffee table littered with half empty mugs and glasses.
+                            %label.closeResponse{:for => 'noneKeyObject-53'}  
+                    -# ===============================================================
+                    -# Reception 3
+                    -# ===============================================================
+                    -if (row == 1 && segment == 5)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-54'}
+                            %img.receptionMagazines{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_magazines.png'}
+                        .response.response-54
+                            A stack of Mason Institute materials. Letterhead, brochures and the like.
+                            %label.closeResponse{:for => 'noneKeyObject-54'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-55'}
+                            %img.receptionBlood{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_receptionBlood.png'}
+                        .response.response-55
+                            I don't want to imagine what happened here.
+                            %label.closeResponse{:for => 'noneKeyObject-55'}  
+                    
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-56'}
+                            %img.filingCabinetReception{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_filingCabinet.png'}
+                        .response.response-56
+                            Filled with patient visitation logs and receptionist notes.
+                            %label.closeResponse{:for => 'noneKeyObject-56'}  
+
+                    -# ===============================================================
+                    -# pc
+                    -# ===============================================================
+                    -if (row == 2 && segment == 15)
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-13'}
+                            %img.securityNote{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_infirmaryNote.png'}
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-57'}
+                            %img.securityFilingCabinet{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_filingCabinet.png'}
+                        .response.response-57
+                            Notes about patient 18's psycological profile. Particularly about his split personality disorder.
+                            %label.closeResponse{:for => 'noneKeyObject-57'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-58'}
+                            %img.coyier{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_coyier_1.png'}
+                        .response.response-58
+                            Head of security. C Coyier.
+                            %label.closeResponse{:for => 'noneKeyObject-58'}  
+                    -# ===============================================================
+                    -# pc
+                    -# ===============================================================
+                    -if (row == 2 && segment == 16)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-59'}
+                            %img.lockers{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_lockers.png'}
+                        .response.response-59
+                            A set of security lockers. I can't open any of them.
+                            %label.closeResponse{:for => 'noneKeyObject-59'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-60'}
+                            %img.shaw{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_shaw.png'}
+                        .response.response-60
+                            Security chief. S Shaw.
+                            %label.closeResponse{:for => 'noneKeyObject-60'}  
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-61'}
+                            %img.evans{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_evans.png'}
+                        .response.response-61
+                            Riot specialist. C Evans.
+                            %label.closeResponse{:for => 'noneKeyObject-61'}  
+                        %label.object.look{:for => 'overlayObject-12'}
+                            %img.crtObject{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_computer.png'}
+                        -# Wardens key card
+                        %label.object.destroy.take{:for => 'keyObject-23'}
+                        .response
+                            That's it! I've done it, the doors should now be unlocked. There's an emergency escape just above me!
+                    -# ===============================================================
+                    -# pc
+                    -# ===============================================================
+                    -if (row == 1 && segment == 13)
+                        %label.object.keyObject.open{:for => 'keyObject-22'}
+                            %img.door{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_door.png'}
+                        .response.fail
+                            This is the exit. I need to deactivate lockdown first.
+                            %label.closeResponse{:for => 'keyObject-22'}
+                        .response.success
+                            Yes it's open! Almost there. I can taste the freedom.
+                    -# ===============================================================
+                    -# pc
+                    -# ===============================================================
+                    -if (row == 1 && segment == 15)
+                        -# Note
+                        %label.object.look{:for => 'noneKeyObject-62'}
+                            %img.corpse{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_corpse.png'}
+                        .response.response-62
+                            Wait. What? There's the body of a caretaker here. It looks as though he was changing the lights...does that mean...
+                            %label.closeResponse{:for => 'noneKeyObject-62'}  
+
+                    -# ===============================================================
+                    -# pc
+                    -# ===============================================================
+                    -if (row == 1 && segment == 16)
+                        -# Note
+                        -# Note
+                        %label.object.look{:for => 'overlayObject-14'}
+                            %img.exit{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fireEscape.png'}
+                    .controls
+                        -# Control labels.
+                        %label.back{:for => "segment-#{segment + ((row - 1) * segments) - 1}-back"}
+                            %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+                        %label.forward{:for => "segment-#{segment + ((row - 1) * segments) + 1}-forwards"}
+                            %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveRight.png'}
+                        %label.up{:for => "segment-#{segment + ((row - 1) * segments) - segments}-forwards"}
+                            %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveUp.png'}
+                        %label.down{:for => "segment-#{segment + ((row - 1) * segments) + segments}-forwards"}
+                            %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveDown.png'}
+                    .segmentNumbers
+                        #{(row - 1) * 16 + segment}
+            
+    -# Main character.     
+    .player
+        .player_sprite
+     
+    -# Level shroud to hide upper and lower levels
+    .lightMap
+    
+
+    -# Overlay objects
+    .overlayObjects
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_noteFull1.png'}
+                %label{:for => 'overlayObject-1'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/updatedNote.png'}
+                %label.show{:for => 'overlayObject-2'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_noteFull3_1.png'}
+                %label.show{:for => 'overlayObject-3'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_staffPhoto.png'}
+                %label.show{:for => 'overlayObject-4'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_canteenNoteFull.png'}
+                %label.show{:for => 'overlayObject-5'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_accessPhotoFull.png'}
+                %label.show{:for => 'overlayObject-6'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+                %label.object.sneakyKey.take{:for => 'keyObject-8'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_sneakyKey.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_radioBack.png'}
+                %input{:type => 'range', :min => '1', :max => '2', :value => '0', :step => '0.01'}
+                %label.battery{:for => 'keyObject-11'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_battery.png'}
+                %label.show{:for => 'overlayObject-7'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_receptionNoteFull_1.png'}
+                %label.show{:for => 'overlayObject-8'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_infirmaryNoteFull.png'}
+                %label.show{:for => 'overlayObject-9'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_scansFull.png'}
+                %label.show{:for => 'overlayObject-10'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseBoxOverlay_3.png', :style => 'width: 710px;'}
+                %label.show{:for => 'overlayObject-11'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+                %label{:for => 'keyObject-16'}
+                    %img.switchFuse.switchOne{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseSwitch.png'}
+                %label{:for => 'keyObject-17'}
+                    %img.switchFuse.switchTwo{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseSwitch.png'}
+                %label{:for => 'keyObject-18'}
+                    %img.switchFuse.switchThree{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseSwitch.png'}
+                %label{:for => 'keyObject-19'}
+                    %img.switchFuse.switchFour{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseSwitch.png'}
+                %label{:for => 'keyObject-20'}
+                    %img.switchFuse.switchFive{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseSwitch.png'}
+                %label{:for => 'keyObject-21'}
+                    %img.switchFuse.switchSix{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_fuseSwitch.png'}
+        .overlayObject
+            .content
+                %img.crt{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_crt.png'}
+                %label.show{:for => 'overlayObject-12'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+                %input#pc1{:type => 'checkbox'}
+                %img.crtPanel{:src => 'https://assets.codepen.io/217233/ct_crtPanel.png'}
+                %input{:type => 'number', :min => '2844', :max => '2844', :value => '0000', :title => "Legs"}
+                %label{:for => 'pc1'}
+                    %img.loginButton{:src => 'https://assets.codepen.io/217233/ct_crtLogin.png'}
+                %label.deactivate{:for => 'keyObject-23'}
+                    %img{:src => 'https://assets.codepen.io/217233/ct_crtDeactivate.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_securityNoteFull.png'}
+                %label.show{:for => 'overlayObject-13'}
+                    %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_moveLeft.png'}
+        .overlayObject
+            .content
+                %img{:draggable => 'false', :src => 'https://assets.codepen.io/217233/ct_newspaper.png', :style => 'width: 1210px;'}
+                %p.end 
+                    Thanks for playing, patient 18. Be sure to like and 
+                    %a{:href => 'https://www.codepen.io/jcoulterdesign', :target => '_blank'}
+                        follow me on Codepen

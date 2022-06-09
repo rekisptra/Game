@@ -1,0 +1,103 @@
+body {
+  background-image: url(https://media.tumblr.com/1ca22c1a4b0b149bef1bf2e787296c32/tumblr_inline_mv7qmdtIo11qid2nw.png);
+  width: 100%;
+  height: 100%;
+  background-size: ;
+  color: ;
+  background-color: ;
+    overflow-x: hidden;
+  text-align: justify;
+  font-family: littlefont, Lucida Console;
+  line-height: 9px;
+  font-size: 8px;
+  text-align: center;
+}
+
+@font-face {
+  font-family: "littlefont";
+  src: url('https://static.tumblr.com/rmj06l2/kcLlo1q2y/pf_ronda_seven.ttf');
+}
+
+.box {
+  width: 40%;
+  height: 100%;
+  background-color: #ffffff;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  padding: 10px;
+  overflow: scroll;
+  z-index:999;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 7px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #FCEDED;
+  -webkit-border-radius: 0ex;
+  border: 1px dotted #7c431c;
+}
+
+a:hover {
+  color: #000000;
+  -webkit-transition-duration: .5s;
+}
+
+a {
+  color: #ffffff;
+  background-color: #000000;
+  padding: 1px;
+  text-decoration: none;
+  font-family: ms gothic;
+  font-size: 12px;
+  text-align: center;
+  white-space: normal;
+}
+
+#river {
+  position: absolute;
+  left: 0px;
+  top: 194px;
+}
+
+#house {
+  position: absolute;
+  left: 339px;
+  top: 45px;
+}
+
+#fence {
+  position: absolute;
+  left: 701px;
+  top: 219px;
+}
+
+#fence2 {
+  position: absolute;
+  left: 765px;
+  top: 241px;
+}
+
+#fence3 {
+  position: absolute;
+  left: 828px;
+  top: 262px;
+}
+
+.draggable {
+  z-index: 999;
+}
+
+#droppable {
+  width: 100%;
+  height: 100%;
+}
+
+.innerbox{
+ padding-left: 60%; 
+  overflow:hidden;
+}
